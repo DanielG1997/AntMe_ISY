@@ -12,14 +12,14 @@ namespace AntMe.Player.Grossenbier
         LastName = ""
     )]
     [Caste(
-        Name = "Default",
-        AttackModifier = 0,
+        Name = "Warrior",
+        AttackModifier = 2,
         EnergyModifier = 0,
-        LoadModifier = 0,
-        RangeModifier = 0,
-        RotationSpeedModifier = 0,
-        SpeedModifier = 0,
-        ViewRangeModifier = 0
+        LoadModifier = -1,
+        RangeModifier = -1,
+        RotationSpeedModifier = -1,
+        SpeedModifier = 2,
+        ViewRangeModifier = -1
     )]
     public class GrossenbierClass : BaseAnt
     {
@@ -34,7 +34,7 @@ namespace AntMe.Player.Grossenbier
         /// <returns>Caste-Name for the next ant</returns>
         public override string ChooseCaste(Dictionary<string, int> typeCount)
         {
-            return "Default";
+            return "Warrior";
         }
 
         #endregion
