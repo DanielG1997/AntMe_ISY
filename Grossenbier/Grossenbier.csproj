@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{d8ddac90-4623-4de2-8433-123d489bc150}</ProjectGuid>
+    <ProjectGuid>{82100dd9-ec58-4180-b08b-b379934b7744}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AntMe.Player.Grossenbier</RootNamespace>
