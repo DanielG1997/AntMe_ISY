@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grossenbier", "Grossenbier.csproj", "{1EB7FC81-8AD7-4FE8-A318-B17C3A9C0B54}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grossenbier", "Grossenbier.csproj", "{58C1C111-6DE2-4ACF-9507-1F0AF408C946}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -10,15 +10,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1EB7FC81-8AD7-4FE8-A318-B17C3A9C0B54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1EB7FC81-8AD7-4FE8-A318-B17C3A9C0B54}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1EB7FC81-8AD7-4FE8-A318-B17C3A9C0B54}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1EB7FC81-8AD7-4FE8-A318-B17C3A9C0B54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58C1C111-6DE2-4ACF-9507-1F0AF408C946}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58C1C111-6DE2-4ACF-9507-1F0AF408C946}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58C1C111-6DE2-4ACF-9507-1F0AF408C946}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58C1C111-6DE2-4ACF-9507-1F0AF408C946}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {5EC4B511-28D3-46D2-B0C6-D28635648F61}
+		SolutionGuid = {BF32249A-588D-4C22-BC10-87622AF99E52}
 	EndGlobalSection
 EndGlobal

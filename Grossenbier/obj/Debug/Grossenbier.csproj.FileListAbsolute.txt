@@ -1,13 +1,13 @@
-C:\Users\Daniel\Documents\Visual Studio 2017\Projects\Grossenbier\bin\AntMe.Player.Grossenbier.dll
-C:\Users\Daniel\Documents\Visual Studio 2017\Projects\Grossenbier\bin\AntMe.Player.Grossenbier.pdb
-C:\Users\Daniel\Documents\Visual Studio 2017\Projects\Grossenbier\bin\AntMe.SharedComponents.dll
-C:\Users\Daniel\Documents\Visual Studio 2017\Projects\Grossenbier\bin\AntMe.Simulation.dll
-C:\Users\Daniel\Documents\Visual Studio 2017\Projects\Grossenbier\bin\AntMe.SharedComponents.xml
-C:\Users\Daniel\Documents\Visual Studio 2017\Projects\Grossenbier\bin\AntMe.Simulation.xml
-C:\Users\Daniel\Documents\Visual Studio 2017\Projects\Grossenbier\bin\de\AntMe.SharedComponents.resources.dll
-C:\Users\Daniel\Documents\Visual Studio 2017\Projects\Grossenbier\bin\de\AntMe.Simulation.resources.dll
-C:\Users\Daniel\Documents\Visual Studio 2017\Projects\Grossenbier\obj\Debug\Grossenbier.csprojAssemblyReference.cache
-C:\Users\Daniel\Documents\Visual Studio 2017\Projects\Grossenbier\obj\Debug\Grossenbier.csproj.CoreCompileInputs.cache
-C:\Users\Daniel\Documents\Visual Studio 2017\Projects\Grossenbier\obj\Debug\Grossenbier.csproj.CopyComplete
-C:\Users\Daniel\Documents\Visual Studio 2017\Projects\Grossenbier\obj\Debug\AntMe.Player.Grossenbier.dll
-C:\Users\Daniel\Documents\Visual Studio 2017\Projects\Grossenbier\obj\Debug\AntMe.Player.Grossenbier.pdb
+C:\Users\Daniel\Documents\GitHub\AntMe_ISY\Grossenbier\bin\AntMe.Player.Grossenbier.dll
+C:\Users\Daniel\Documents\GitHub\AntMe_ISY\Grossenbier\bin\AntMe.Player.Grossenbier.pdb
+C:\Users\Daniel\Documents\GitHub\AntMe_ISY\Grossenbier\bin\AntMe.SharedComponents.dll
+C:\Users\Daniel\Documents\GitHub\AntMe_ISY\Grossenbier\bin\AntMe.Simulation.dll
+C:\Users\Daniel\Documents\GitHub\AntMe_ISY\Grossenbier\bin\AntMe.SharedComponents.xml
+C:\Users\Daniel\Documents\GitHub\AntMe_ISY\Grossenbier\bin\AntMe.Simulation.xml
+C:\Users\Daniel\Documents\GitHub\AntMe_ISY\Grossenbier\bin\de\AntMe.SharedComponents.resources.dll
+C:\Users\Daniel\Documents\GitHub\AntMe_ISY\Grossenbier\bin\de\AntMe.Simulation.resources.dll
+C:\Users\Daniel\Documents\GitHub\AntMe_ISY\Grossenbier\obj\Debug\Grossenbier.csprojAssemblyReference.cache
+C:\Users\Daniel\Documents\GitHub\AntMe_ISY\Grossenbier\obj\Debug\Grossenbier.csproj.CoreCompileInputs.cache
+C:\Users\Daniel\Documents\GitHub\AntMe_ISY\Grossenbier\obj\Debug\Grossenbier.csproj.CopyComplete
+C:\Users\Daniel\Documents\GitHub\AntMe_ISY\Grossenbier\obj\Debug\AntMe.Player.Grossenbier.dll
+C:\Users\Daniel\Documents\GitHub\AntMe_ISY\Grossenbier\obj\Debug\AntMe.Player.Grossenbier.pdb
