@@ -59,6 +59,10 @@ namespace AntMe.Player.Grossenbier
     )]
     public class GrossenbierKlasse : Basisameise
     {
+
+        public static Spielobjekt bau = null;
+        public static List<Tuple<int,int>> GegnerBauKoordinaten = null;
+
         #region Kasten
 
         /// <summary>
@@ -72,15 +76,12 @@ namespace AntMe.Player.Grossenbier
         public override string BestimmeKaste(Dictionary<string, int> anzahl)
         {
             // Gibt den Namen der betroffenen Kaste zurück.
-            if (anzahl["Späher"] < 5)
+            if (anzahl["Späher"] < 15)
                 return "Späher";
 
-            else if (anzahl["Sammler"] < 15 && anzahl["Späher"] == 5)
-                return "Sammler";
-
-            else if (anzahl["Krieger"] < 80)
-                return "Krieger";
-
+            //else if (anzahl["Sammler"] < 15 && anzahl["Späher"] == 5)
+            //    return "sammler";
+            
             else
                 return "Krieger";
         }   
@@ -126,6 +127,13 @@ namespace AntMe.Player.Grossenbier
         /// </summary>
         public override void Tick()
         {
+            if(bau == null)
+            {
+                GeheZuBau();
+                bau = Ziel;
+                BleibStehen();
+            }
+
         }
 
         #endregion
@@ -224,6 +232,11 @@ namespace AntMe.Player.Grossenbier
         /// <param name="ameise">Erspähte feindliche Ameise</param>
         public override void SiehtFeind(Ameise ameise)
         {
+            if(ameise.AktuelleLast == ameise.MaximaleLast)
+            {
+                GegnerBauKoordinaten.Add(GetAmeisenZiel(ameise));
+                
+            }
         }
 
         /// <summary>
@@ -259,5 +272,70 @@ namespace AntMe.Player.Grossenbier
         }
 
         #endregion
+
+        public Tuple<int,int> GetAmeisenZiel(Ameise ameise)
+        {
+            double distance = ameise.RestStrecke;
+            double richtung = ameise.RestWinkel + ameise.Richtung;
+
+            double angle = richtung / 360 * Math.PI * 2;
+
+            int x = (int)(Math.Cos(angle) * distance);
+            int y = (int)(Math.Sin(angle) * distance);
+
+            return new Tuple<int, int>(x, y);
+        }
+
+        public Tuple<int,int> GetCoordinates(Spielobjekt spielobjekt)
+        {
+            if(bau != null) { 
+                double distance = Koordinate.BestimmeEntfernung(spielobjekt, bau);
+                double richtung = Koordinate.BestimmeRichtung(bau, spielobjekt);
+
+                double angle = richtung / 360 * Math.PI * 2;
+
+                int x = (int)(Math.Cos(angle) * distance);
+                int y = (int)(Math.Sin(angle) * distance);
+
+                return new Tuple<int, int> (x,y);
+            }
+            GeheZuBau();
+            bau = Ziel;
+            BleibStehen();
+            return GetCoordinates(spielobjekt);
+        }
+
+        public Tuple<int, int> GetCoordinates(Basisameise spielobjekt)
+        {
+            if (bau != null)
+            {
+                double distance = Koordinate.BestimmeEntfernung(spielobjekt, bau);
+                double richtung = Koordinate.BestimmeRichtung(bau, spielobjekt);
+
+                double angle = richtung / 360 * Math.PI * 2;
+
+                int x = (int)(Math.Cos(angle) * distance);
+                int y = (int)(Math.Sin(angle) * distance);
+
+                return new Tuple<int, int>(x, y);
+            }
+            GeheZuBau();
+            bau = Ziel;
+            BleibStehen();
+            return GetCoordinates(spielobjekt);
+        }
+
+        public void gehezuKoordinate(Tuple<int,int> koord)
+        {
+            Tuple<int, int> myPos = GetCoordinates(this);
+            Tuple<int, int> posDiff = new Tuple<int, int>(koord.Item1 - myPos.Item1, koord.Item2 - myPos.Item2);
+
+            int distanz = (int)(Math.Sqrt(posDiff.Item1 * posDiff.Item1 + posDiff.Item2 * posDiff.Item2));
+            double radiant = Math.Atan2(posDiff.Item2, posDiff.Item1);
+            int richtung = (int)(radiant * 360 / (2 * Math.PI));
+
+            DreheInRichtung(richtung);
+            GeheGeradeaus(distanz);
+        }
     }
 }
