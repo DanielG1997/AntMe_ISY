@@ -26,14 +26,36 @@ namespace AntMe.Player.Grossenbier
     /// den Fähigkeiten einzelner Ameisen arbeiten. Wie genau das funktioniert kannst du der 
     /// Lektion zur Spezialisierung von Ameisen entnehmen (http://wiki.antme.net/de/Lektion7).
     [Kaste(
-        Name = "Standard",                  // Name der Berufsgruppe
-        AngriffModifikator = 0,             // Angriffsstärke einer Ameise
+        Name = "Späher",                  // Name der Berufsgruppe
+        AngriffModifikator = -1,             // Angriffsstärke einer Ameise
+        DrehgeschwindigkeitModifikator = -1, // Drehgeschwindigkeit einer Ameise
+        EnergieModifikator = -1,             // Lebensenergie einer Ameise
+        GeschwindigkeitModifikator = 2,     // Laufgeschwindigkeit einer Ameise
+        LastModifikator = -1,                // Tragkraft einer Ameise
+        ReichweiteModifikator = 1,          // Ausdauer einer Ameise
+        SichtweiteModifikator = 1           // Sichtweite einer Ameise
+    )]
+
+    [Kaste(
+        Name = "Sammler",                  // Name der Berufsgruppe
+        AngriffModifikator = -1,             // Angriffsstärke einer Ameise
         DrehgeschwindigkeitModifikator = 0, // Drehgeschwindigkeit einer Ameise
+        EnergieModifikator = -1,             // Lebensenergie einer Ameise
+        GeschwindigkeitModifikator = 2,     // Laufgeschwindigkeit einer Ameise
+        LastModifikator = 2,                // Tragkraft einer Ameise
+        ReichweiteModifikator = -1,          // Ausdauer einer Ameise
+        SichtweiteModifikator = -1           // Sichtweite einer Ameise
+    )]
+
+    [Kaste(
+        Name = "Krieger",                  // Name der Berufsgruppe
+        AngriffModifikator = 2,             // Angriffsstärke einer Ameise
+        DrehgeschwindigkeitModifikator = -1, // Drehgeschwindigkeit einer Ameise
         EnergieModifikator = 0,             // Lebensenergie einer Ameise
-        GeschwindigkeitModifikator = 0,     // Laufgeschwindigkeit einer Ameise
-        LastModifikator = 0,                // Tragkraft einer Ameise
-        ReichweiteModifikator = 0,          // Ausdauer einer Ameise
-        SichtweiteModifikator = 0           // Sichtweite einer Ameise
+        GeschwindigkeitModifikator = 2,     // Laufgeschwindigkeit einer Ameise
+        LastModifikator = -1,                // Tragkraft einer Ameise
+        ReichweiteModifikator = -1,          // Ausdauer einer Ameise
+        SichtweiteModifikator = -1           // Sichtweite einer Ameise
     )]
     public class GrossenbierKlasse : Basisameise
     {
@@ -50,8 +72,19 @@ namespace AntMe.Player.Grossenbier
         public override string BestimmeKaste(Dictionary<string, int> anzahl)
         {
             // Gibt den Namen der betroffenen Kaste zurück.
-            return "Standard";
-        }
+            if (anzahl["Späher"] < 5)
+                return "Späher";
+
+            else if (anzahl["Sammler"] < 15 && anzahl["Späher"] == 5)
+                return "Sammler";
+
+            else if (anzahl["Krieger"] < 80)
+                return "Krieger";
+
+            else
+                return "Krieger";
+        }   
+
 
         #endregion
 
