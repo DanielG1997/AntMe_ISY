@@ -61,7 +61,7 @@ namespace AntMe.Player.Grossenbier
     {
 
         public static Spielobjekt bau = null;
-        public static List<Tuple<int,int>> GegnerBauKoordinaten = null;
+        public static List<Tuple<int,int>> GegnerBauKoordinaten = new List<Tuple<int, int>>();
 
         #region Kasten
 
@@ -76,11 +76,11 @@ namespace AntMe.Player.Grossenbier
         public override string BestimmeKaste(Dictionary<string, int> anzahl)
         {
             // Gibt den Namen der betroffenen Kaste zurück.
-            if (anzahl["Späher"] < 10 && anzahl["Sammler"] == 0 && anzahl["Krieger"] == 0)
+            if (anzahl["Späher"] < 10)
                 return "Späher";
 
-            else if (anzahl["Sammler"] < 10 && anzahl["Späher"] == 10)
-                return "Sammler";
+            //else if (anzahl["Sammler"] < 10 && anzahl["Späher"] == 10)
+            //    return "Sammler";
      
             else
                 return "Krieger";
@@ -98,7 +98,16 @@ namespace AntMe.Player.Grossenbier
         /// </summary>
         public override void Wartet()
         {
-            GeheGeradeaus();
+            if(Kaste == "Krieger")
+            {
+                if(GegnerBauKoordinaten.Capacity != 0)
+                {
+                    gehezuKoordinate(GegnerBauKoordinaten.ElementAt(Zufall.Zahl(GegnerBauKoordinaten.Count)));
+                }
+            }else
+            {
+                GeheGeradeaus();
+            }
         }
 
         /// <summary>
@@ -245,16 +254,16 @@ namespace AntMe.Player.Grossenbier
             {
                 if (ameise.AktuelleLast > 0)
                 {
-                    GeheZuZiel(ameise);
-                    if (ameise.RestStrecke < 50)
-                    {
-                        BleibStehen();
-                        SprüheMarkierung(0, 4000);
-                    }
+                    gehezuKoordinate(GetCoordinates(ameise));
+                    
                 }
             }
             else if (Kaste == "Krieger") {
-                GreifeAn(ameise);
+                if(ameise.AktuelleGeschwindigkeit < this.MaximaleGeschwindigkeit)
+                {
+                    gehezuKoordinate(GetCoordinates(ameise));
+                    GreifeAn(ameise);
+                }                
             }
         }
 
@@ -297,10 +306,10 @@ namespace AntMe.Player.Grossenbier
             double distance = ameise.RestStrecke;
             double richtung = ameise.RestWinkel + ameise.Richtung;
 
-            double angle = richtung / 360 * Math.PI * 2;
+            double angle = (richtung / 360) * (Math.PI * 2);
 
-            int x = (int)(Math.Cos(angle) * distance);
-            int y = (int)(Math.Sin(angle) * distance);
+            int x = (int)(Math.Cos(angle) * distance) + GetCoordinates(ameise).Item1;
+            int y = (int)(Math.Sin(angle) * distance) + GetCoordinates(ameise).Item2;
 
             return new Tuple<int, int>(x, y);
         }
@@ -311,7 +320,7 @@ namespace AntMe.Player.Grossenbier
                 double distance = Koordinate.BestimmeEntfernung(spielobjekt, bau);
                 double richtung = Koordinate.BestimmeRichtung(bau, spielobjekt);
 
-                double angle = richtung / 360 * Math.PI * 2;
+                double angle = (richtung / 360) * (Math.PI * 2);
 
                 int x = (int)(Math.Cos(angle) * distance);
                 int y = (int)(Math.Sin(angle) * distance);
@@ -331,7 +340,7 @@ namespace AntMe.Player.Grossenbier
                 double distance = Koordinate.BestimmeEntfernung(spielobjekt, bau);
                 double richtung = Koordinate.BestimmeRichtung(bau, spielobjekt);
 
-                double angle = richtung / 360 * Math.PI * 2;
+                double angle = (richtung / 360) * (Math.PI * 2);
 
                 int x = (int)(Math.Cos(angle) * distance);
                 int y = (int)(Math.Sin(angle) * distance);
