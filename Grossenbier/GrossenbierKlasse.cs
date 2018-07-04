@@ -76,12 +76,12 @@ namespace AntMe.Player.Grossenbier
         public override string BestimmeKaste(Dictionary<string, int> anzahl)
         {
             // Gibt den Namen der betroffenen Kaste zurück.
-            if (anzahl["Späher"] < 15)
+            if (anzahl["Späher"] < 10 && anzahl["Sammler"] == 0 && anzahl["Krieger"] == 0)
                 return "Späher";
 
-            //else if (anzahl["Sammler"] < 15 && anzahl["Späher"] == 5)
-            //    return "sammler";
-            
+            else if (anzahl["Sammler"] < 10 && anzahl["Späher"] == 10)
+                return "Sammler";
+     
             else
                 return "Krieger";
         }   
@@ -98,6 +98,7 @@ namespace AntMe.Player.Grossenbier
         /// </summary>
         public override void Wartet()
         {
+            GeheGeradeaus();
         }
 
         /// <summary>
@@ -106,6 +107,8 @@ namespace AntMe.Player.Grossenbier
         /// </summary>
         public override void WirdMüde()
         {
+            if (AktuelleEnergie < MaximaleEnergie / 2)
+                GeheZuBau();
         }
 
         /// <summary>
@@ -195,6 +198,7 @@ namespace AntMe.Player.Grossenbier
         /// <param name="markierung">Die gerochene Markierung</param>
         public override void RiechtFreund(Markierung markierung)
         {
+            GeheZuZiel(markierung);
         }
 
         /// <summary>
@@ -236,6 +240,21 @@ namespace AntMe.Player.Grossenbier
             {
                 GegnerBauKoordinaten.Add(GetAmeisenZiel(ameise));
                 
+            }
+            if (Kaste == "Späher")
+            {
+                if (ameise.AktuelleLast > 0)
+                {
+                    GeheZuZiel(ameise);
+                    if (ameise.RestStrecke < 50)
+                    {
+                        BleibStehen();
+                        SprüheMarkierung(0, 4000);
+                    }
+                }
+            }
+            else if (Kaste == "Krieger") {
+                GreifeAn(ameise);
             }
         }
 
