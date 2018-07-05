@@ -18,8 +18,8 @@ namespace AntMe.Player.Grossenbier
     /// </summary>
     [Spieler(
         Volkname = "Grossenbier",   // Hier kannst du den Namen des Volkes festlegen
-        Vorname = "",       // An dieser Stelle kannst du dich als Schöpfer der Ameise eintragen
-        Nachname = ""       // An dieser Stelle kannst du dich als Schöpfer der Ameise eintragen
+        Vorname = "Daniel Großenbach &",       // An dieser Stelle kannst du dich als Schöpfer der Ameise eintragen
+        Nachname = "Lennart Bierwolf"       // An dieser Stelle kannst du dich als Schöpfer der Ameise eintragen
     )]
 
     /// Kasten stellen "Berufsgruppen" innerhalb deines Ameisenvolkes dar. Du kannst hier mit
@@ -37,17 +37,6 @@ namespace AntMe.Player.Grossenbier
     )]
 
     [Kaste(
-        Name = "Sammler",                  // Name der Berufsgruppe
-        AngriffModifikator = -1,             // Angriffsstärke einer Ameise
-        DrehgeschwindigkeitModifikator = 0, // Drehgeschwindigkeit einer Ameise
-        EnergieModifikator = -1,             // Lebensenergie einer Ameise
-        GeschwindigkeitModifikator = 2,     // Laufgeschwindigkeit einer Ameise
-        LastModifikator = 2,                // Tragkraft einer Ameise
-        ReichweiteModifikator = -1,          // Ausdauer einer Ameise
-        SichtweiteModifikator = -1           // Sichtweite einer Ameise
-    )]
-
-    [Kaste(
         Name = "Krieger",                  // Name der Berufsgruppe
         AngriffModifikator = 2,             // Angriffsstärke einer Ameise
         DrehgeschwindigkeitModifikator = -1, // Drehgeschwindigkeit einer Ameise
@@ -61,7 +50,7 @@ namespace AntMe.Player.Grossenbier
     {
 
         public static Spielobjekt bau = null;
-        public static List<Tuple<int,int>> GegnerBauKoordinaten = new List<Tuple<int, int>>();
+        public static SortedSet<Tuple<int,int>> GegnerBauKoordinaten = new SortedSet<Tuple<int, int>>();
 
         #region Kasten
 
@@ -78,10 +67,6 @@ namespace AntMe.Player.Grossenbier
             // Gibt den Namen der betroffenen Kaste zurück.
             if (anzahl["Späher"] < 10)
                 return "Späher";
-
-            //else if (anzahl["Sammler"] < 10 && anzahl["Späher"] == 10)
-            //    return "Sammler";
-     
             else
                 return "Krieger";
         }   
@@ -100,9 +85,9 @@ namespace AntMe.Player.Grossenbier
         {
             if(Kaste == "Krieger")
             {
-                if(GegnerBauKoordinaten.Capacity != 0)
+                if(GegnerBauKoordinaten.Count != 0)
                 {
-                    gehezuKoordinate(GegnerBauKoordinaten.ElementAt(Zufall.Zahl(GegnerBauKoordinaten.Count)));
+                    GeheZuKoordinate(GegnerBauKoordinaten.ElementAt(Zufall.Zahl(GegnerBauKoordinaten.Count)));
                 }
             }else
             {
@@ -207,7 +192,6 @@ namespace AntMe.Player.Grossenbier
         /// <param name="markierung">Die gerochene Markierung</param>
         public override void RiechtFreund(Markierung markierung)
         {
-            GeheZuZiel(markierung);
         }
 
         /// <summary>
@@ -247,21 +231,21 @@ namespace AntMe.Player.Grossenbier
         {
             if(ameise.AktuelleLast == ameise.MaximaleLast)
             {
-                GegnerBauKoordinaten.Add(GetAmeisenZiel(ameise));
+                GegnerBauKoordinaten.Add(HoleAmeisenZiel(ameise));
                 
             }
             if (Kaste == "Späher")
             {
                 if (ameise.AktuelleLast > 0)
                 {
-                    gehezuKoordinate(GetCoordinates(ameise));
+                    GeheZuKoordinate(HoleKoordinaten(ameise));
                     
                 }
             }
             else if (Kaste == "Krieger") {
                 if(ameise.AktuelleGeschwindigkeit < this.MaximaleGeschwindigkeit)
                 {
-                    gehezuKoordinate(GetCoordinates(ameise));
+                    GeheZuKoordinate(HoleKoordinaten(ameise));
                     GreifeAn(ameise);
                 }                
             }
@@ -286,6 +270,10 @@ namespace AntMe.Player.Grossenbier
         /// <param name="ameise">Angreifende Ameise</param>
         public override void WirdAngegriffen(Ameise ameise)
         {
+            if(Kaste == "Krieger")
+            {
+                GreifeAn(ameise);
+            }
         }
 
         /// <summary>
@@ -301,65 +289,65 @@ namespace AntMe.Player.Grossenbier
 
         #endregion
 
-        public Tuple<int,int> GetAmeisenZiel(Ameise ameise)
+        public Tuple<int,int> HoleAmeisenZiel(Ameise ameise)
         {
             double distance = ameise.RestStrecke;
             double richtung = ameise.RestWinkel + ameise.Richtung;
 
             double angle = (richtung / 360) * (Math.PI * 2);
 
-            int x = (int)(Math.Cos(angle) * distance) + GetCoordinates(ameise).Item1;
-            int y = (int)(Math.Sin(angle) * distance) + GetCoordinates(ameise).Item2;
+            int x = (int)(Math.Cos(angle) * distance) + HoleKoordinaten(ameise).Item1;
+            int y = (int)(Math.Sin(angle) * distance) + HoleKoordinaten(ameise).Item2;
 
             return new Tuple<int, int>(x, y);
         }
 
-        public Tuple<int,int> GetCoordinates(Spielobjekt spielobjekt)
+        public Tuple<int,int> HoleKoordinaten(Spielobjekt spielobjekt)
         {
             if(bau != null) { 
-                double distance = Koordinate.BestimmeEntfernung(spielobjekt, bau);
+                double distanz = Koordinate.BestimmeEntfernung(spielobjekt, bau);
                 double richtung = Koordinate.BestimmeRichtung(bau, spielobjekt);
 
-                double angle = (richtung / 360) * (Math.PI * 2);
+                double winkel = (richtung / 360) * (Math.PI * 2);
 
-                int x = (int)(Math.Cos(angle) * distance);
-                int y = (int)(Math.Sin(angle) * distance);
+                int x = (int)(Math.Cos(winkel) * distanz);
+                int y = (int)(Math.Sin(winkel) * distanz);
 
                 return new Tuple<int, int> (x,y);
             }
             GeheZuBau();
             bau = Ziel;
             BleibStehen();
-            return GetCoordinates(spielobjekt);
+            return HoleKoordinaten(spielobjekt);
         }
 
-        public Tuple<int, int> GetCoordinates(Basisameise spielobjekt)
+        public Tuple<int, int> HoleKoordinaten(Basisameise ameise)
         {
             if (bau != null)
             {
-                double distance = Koordinate.BestimmeEntfernung(spielobjekt, bau);
-                double richtung = Koordinate.BestimmeRichtung(bau, spielobjekt);
+                double distanz = Koordinate.BestimmeEntfernung(ameise, bau);
+                double richtung = Koordinate.BestimmeRichtung(bau, ameise);
 
-                double angle = (richtung / 360) * (Math.PI * 2);
+                double winkel = (richtung / 360) * (Math.PI * 2);
 
-                int x = (int)(Math.Cos(angle) * distance);
-                int y = (int)(Math.Sin(angle) * distance);
+                int x = (int)(Math.Cos(winkel) * distanz);
+                int y = (int)(Math.Sin(winkel) * distanz);
 
                 return new Tuple<int, int>(x, y);
             }
             GeheZuBau();
             bau = Ziel;
             BleibStehen();
-            return GetCoordinates(spielobjekt);
+            return HoleKoordinaten(ameise);
         }
 
-        public void gehezuKoordinate(Tuple<int,int> koord)
+        public void GeheZuKoordinate(Tuple<int,int> koord)
         {
-            Tuple<int, int> myPos = GetCoordinates(this);
-            Tuple<int, int> posDiff = new Tuple<int, int>(koord.Item1 - myPos.Item1, koord.Item2 - myPos.Item2);
+            Tuple<int, int> position = HoleKoordinaten(this);
+            Tuple<int, int> differenz = new Tuple<int, int>(koord.Item1 - position.Item1, koord.Item2 - position.Item2);
 
-            int distanz = (int)(Math.Sqrt(posDiff.Item1 * posDiff.Item1 + posDiff.Item2 * posDiff.Item2));
-            double radiant = Math.Atan2(posDiff.Item2, posDiff.Item1);
+            int distanz = (int)(Math.Sqrt(differenz.Item1 * differenz.Item1 + differenz.Item2 * differenz.Item2));
+            double radiant = Math.Atan2(differenz.Item2, differenz.Item1);
             int richtung = (int)(radiant * 360 / (2 * Math.PI));
 
             DreheInRichtung(richtung);
