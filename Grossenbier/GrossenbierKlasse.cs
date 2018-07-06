@@ -40,11 +40,11 @@ namespace AntMe.Player.Grossenbier
         Name = "Krieger",                  // Name der Berufsgruppe
         AngriffModifikator = 2,             // Angriffsstärke einer Ameise
         DrehgeschwindigkeitModifikator = -1, // Drehgeschwindigkeit einer Ameise
-        EnergieModifikator = 0,             // Lebensenergie einer Ameise
+        EnergieModifikator = -1,             // Lebensenergie einer Ameise
         GeschwindigkeitModifikator = 2,     // Laufgeschwindigkeit einer Ameise
         LastModifikator = -1,                // Tragkraft einer Ameise
         ReichweiteModifikator = -1,          // Ausdauer einer Ameise
-        SichtweiteModifikator = -1           // Sichtweite einer Ameise
+        SichtweiteModifikator = 0           // Sichtweite einer Ameise
     )]
     public class GrossenbierKlasse : Basisameise
     {
@@ -88,12 +88,12 @@ namespace AntMe.Player.Grossenbier
             {
                 if(GegnerBauKoordinaten.Count != 0)
                 {
-                    GeheZuKoordinate(GegnerBauKoordinaten.ElementAt(Zufall.Zahl(GegnerBauKoordinaten.Count)));
+                    GeheZuKoordinate(AddiereTuple(GegnerBauKoordinaten.ElementAt(Zufall.Zahl(GegnerBauKoordinaten.Count)), new Tuple<int, int>(Zufall.Zahl(-100, 100), Zufall.Zahl(-100, 100))));
                 }
             }else
             if(Kaste == "Späher" && GegnerBauKoordinaten.Count > 30)
             {
-                GeheZuKoordinate(AddiereTuple(GegnerBauKoordinaten.ElementAt(Zufall.Zahl(GegnerBauKoordinaten.Count)), new Tuple<int, int>(Zufall.Zahl(60), Zufall.Zahl(60))));
+                GeheZuKoordinate(AddiereTuple(GegnerBauKoordinaten.ElementAt(Zufall.Zahl(GegnerBauKoordinaten.Count)), new Tuple<int, int>(Zufall.Zahl(-50, 50), Zufall.Zahl(50, 50))));
             }else
             {
                 //LaufeSpirale();
@@ -108,8 +108,8 @@ namespace AntMe.Player.Grossenbier
         /// </summary>
         public override void WirdMüde()
         {
-            if (AktuelleEnergie < MaximaleEnergie / 2 || ZurückgelegteStrecke < Reichweite / 2)
-                GeheZuBau();
+            //if (AktuelleEnergie < MaximaleEnergie / 2 || ZurückgelegteStrecke < Reichweite / 2)
+            //    GeheZuBau();
         }
 
         /// <summary>
@@ -152,6 +152,7 @@ namespace AntMe.Player.Grossenbier
         /// <param name="obst">Das gesichtete Stück Obst</param>
         public override void Sieht(Obst obst)
         {
+            
         }
 
         /// <summary>
@@ -238,33 +239,39 @@ namespace AntMe.Player.Grossenbier
         {
             if(ameise.AktuelleLast == ameise.MaximaleLast)
             {
-                if(GegnerBauKoordinaten.Count < 1500)
+                if(ameise.RestStrecke < 2000)
                 {
-                    GegnerBauKoordinaten.Add(HoleAmeisenZiel(ameise));
-                }else
-                {
-                    GegnerBauKoordinaten.Remove(GegnerBauKoordinaten.ElementAt(0));
-                    GegnerBauKoordinaten.Add(HoleAmeisenZiel(ameise));
-                }
-                
-            }
-            if (Kaste == "Späher")
-            {
-                if (ameise.AktuelleLast > 0)
-                {
-                    GeheZuKoordinate(HoleKoordinaten(ameise));
-                    
-                }
-            }
-            else if (Kaste == "Krieger") {
-                if(ameise.AktuelleGeschwindigkeit < this.MaximaleGeschwindigkeit || ameise.AktuelleLast > 0)
-                {
-                    GeheZuKoordinate(HoleKoordinaten(ameise));
-                    if(Koordinate.BestimmeEntfernung(ameise, this) < 50)
+
+                    if (GegnerBauKoordinaten.Count < 1500)
                     {
-                        GreifeAn(ameise);
+                        GegnerBauKoordinaten.Add(HoleAmeisenZiel(ameise));
                     }
-                }                
+                    else
+                    {
+                        GegnerBauKoordinaten.Remove(GegnerBauKoordinaten.ElementAt(0));
+                        GegnerBauKoordinaten.Add(HoleAmeisenZiel(ameise));
+                    }
+
+                }
+                if (Kaste == "Späher")
+                {
+                    if (ameise.AktuelleLast > 0)
+                    {
+                        GeheZuKoordinate(HoleKoordinaten(ameise));
+
+                    }
+                }
+                else if (Kaste == "Krieger")
+                {
+                    if (ameise.AktuelleGeschwindigkeit < this.MaximaleGeschwindigkeit || ameise.AktuelleLast > 0)
+                    {
+                        FangeAb(ameise);
+                        if (Koordinate.BestimmeEntfernung(ameise, this) < 25)
+                        {
+                            GreifeAn(ameise);
+                        }
+                    }
+                }             
             }
         }
 
@@ -326,6 +333,11 @@ namespace AntMe.Player.Grossenbier
             return new Tuple<int, int>(a.Item1 + b.Item1, a.Item2 + b.Item2);
         }
 
+        public Tuple<int, int> SubtrahiereTuple(Tuple<int, int> a, Tuple<int, int> b)
+        {
+            return new Tuple<int, int>(a.Item1 - b.Item1, a.Item2 - b.Item2);
+        }
+
         public Tuple<int,int> HoleKoordinaten(Spielobjekt spielobjekt)
         {
             if(bau != null) { 
@@ -376,6 +388,34 @@ namespace AntMe.Player.Grossenbier
 
             DreheInRichtung(richtung);
             GeheGeradeaus(distanz);
+        }
+
+        public void FangeAb(Ameise ameise)
+        {
+            Tuple<int, int> A = HoleKoordinaten(this);
+            Tuple<int, int> B = HoleKoordinaten(ameise);
+
+
+            Tuple<int, int> H = new Tuple<int, int>(HoleAmeisenZiel(ameise).Item1, HoleAmeisenZiel(ameise).Item2);
+
+            double sin_beta = ((A.Item1 - B.Item1) * (H.Item2 - B.Item2) - (A.Item2 - B.Item2) * (H.Item1 - B.Item1)) / (Math.Sqrt(Math.Pow((B.Item1 - A.Item1), 2) + Math.Pow((B.Item2 - A.Item2), 2)) * Math.Sqrt((Math.Pow((B.Item1 - H.Item1), 2) + Math.Pow((B.Item2 - H.Item2), 2))));
+            double sin_alpha = (ameise.AktuelleGeschwindigkeit / this.AktuelleGeschwindigkeit) * sin_beta;
+
+            if (Math.Abs(sin_alpha) > 1)
+            {
+                return;
+            }
+
+            double sin_gamma = sin_alpha * Math.Sqrt(1 - Math.Pow(sin_beta, 2)) + sin_beta * Math.Sqrt(1 - Math.Pow(sin_alpha, 2));
+            if (((Math.Sqrt(Math.Pow((B.Item1 - A.Item1), 2) + Math.Pow((B.Item2 - A.Item2), 2))) * (sin_alpha / sin_gamma) > Math.Sqrt((Math.Pow((A.Item1 - H.Item1), 2) + Math.Pow((A.Item2 - H.Item2), 2)))))
+            {
+                return;
+            }
+
+            DreheInRichtung((int) (Math.Asin(sin_alpha) * 180 / Math.PI));
+            GeheGeradeaus((int) (Math.Cos((Math.Asin(sin_alpha) * 180 / Math.PI)) * Math.Sqrt(Math.Pow(SubtrahiereTuple(A, B).Item1, 2) + Math.Pow(SubtrahiereTuple(A, B).Item2, 2))));
+
+
         }
 
         //public void LaufeSpirale()
