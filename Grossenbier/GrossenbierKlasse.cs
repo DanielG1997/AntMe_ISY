@@ -90,6 +90,10 @@ namespace AntMe.Player.Grossenbier
                     GeheZuKoordinate(GegnerBauKoordinaten.ElementAt(Zufall.Zahl(GegnerBauKoordinaten.Count)));
                 }
             }else
+            if(Kaste == "Späher" && GegnerBauKoordinaten.Count > 30)
+            {
+                GeheZuKoordinate(AddiereTuple(GegnerBauKoordinaten.ElementAt(Zufall.Zahl(GegnerBauKoordinaten.Count)), new Tuple<int, int>(Zufall.Zahl(60), Zufall.Zahl(60))));
+            }else
             {
                 GeheGeradeaus();
             }
@@ -231,7 +235,14 @@ namespace AntMe.Player.Grossenbier
         {
             if(ameise.AktuelleLast == ameise.MaximaleLast)
             {
-                GegnerBauKoordinaten.Add(HoleAmeisenZiel(ameise));
+                if(GegnerBauKoordinaten.Count < 1500)
+                {
+                    GegnerBauKoordinaten.Add(HoleAmeisenZiel(ameise));
+                }else
+                {
+                    GegnerBauKoordinaten.Remove(GegnerBauKoordinaten.ElementAt(0));
+                    GegnerBauKoordinaten.Add(HoleAmeisenZiel(ameise));
+                }
                 
             }
             if (Kaste == "Späher")
@@ -243,10 +254,13 @@ namespace AntMe.Player.Grossenbier
                 }
             }
             else if (Kaste == "Krieger") {
-                if(ameise.AktuelleGeschwindigkeit < this.MaximaleGeschwindigkeit)
+                if(ameise.AktuelleGeschwindigkeit < this.MaximaleGeschwindigkeit || ameise.AktuelleLast > 0)
                 {
                     GeheZuKoordinate(HoleKoordinaten(ameise));
-                    GreifeAn(ameise);
+                    if(Koordinate.BestimmeEntfernung(ameise, this) < 50)
+                    {
+                        GreifeAn(ameise);
+                    }
                 }                
             }
         }
@@ -300,6 +314,11 @@ namespace AntMe.Player.Grossenbier
             int y = (int)(Math.Sin(angle) * distance) + HoleKoordinaten(ameise).Item2;
 
             return new Tuple<int, int>(x, y);
+        }
+
+        public Tuple<int, int> AddiereTuple(Tuple<int,int> a, Tuple<int, int> b)
+        {
+            return new Tuple<int, int>(a.Item1 + b.Item1, a.Item2 + b.Item2);
         }
 
         public Tuple<int,int> HoleKoordinaten(Spielobjekt spielobjekt)
