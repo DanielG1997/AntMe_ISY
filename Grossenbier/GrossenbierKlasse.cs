@@ -18,7 +18,7 @@ namespace AntMe.Player.Grossenbier
     /// </summary>
     [Spieler(
         Volkname = "Grossenbier",   // Hier kannst du den Namen des Volkes festlegen
-        Vorname = "Daniel Großenbach &",       // An dieser Stelle kannst du dich als Schöpfer der Ameise eintragen
+        Vorname = "Daniel Großenbach ,",       // An dieser Stelle kannst du dich als Schöpfer der Ameise eintragen
         Nachname = "Lennart Bierwolf"       // An dieser Stelle kannst du dich als Schöpfer der Ameise eintragen
     )]
 
@@ -51,6 +51,7 @@ namespace AntMe.Player.Grossenbier
 
         public static Spielobjekt bau = null;
         public static SortedSet<Tuple<int,int>> GegnerBauKoordinaten = new SortedSet<Tuple<int, int>>();
+        //public static List<Tuple<int,int>> SpähKoordinaten = new List<Tuple<int, int>>();
 
         #region Kasten
 
@@ -95,6 +96,8 @@ namespace AntMe.Player.Grossenbier
                 GeheZuKoordinate(AddiereTuple(GegnerBauKoordinaten.ElementAt(Zufall.Zahl(GegnerBauKoordinaten.Count)), new Tuple<int, int>(Zufall.Zahl(60), Zufall.Zahl(60))));
             }else
             {
+                //LaufeSpirale();
+                //GeheZuKoordinate(SpähKoordinaten.ElementAt(0));
                 GeheGeradeaus();
             }
         }
@@ -105,7 +108,7 @@ namespace AntMe.Player.Grossenbier
         /// </summary>
         public override void WirdMüde()
         {
-            if (AktuelleEnergie < MaximaleEnergie / 2)
+            if (AktuelleEnergie < MaximaleEnergie / 2 || ZurückgelegteStrecke < Reichweite / 2)
                 GeheZuBau();
         }
 
@@ -303,6 +306,8 @@ namespace AntMe.Player.Grossenbier
 
         #endregion
 
+        #region Methoden
+
         public Tuple<int,int> HoleAmeisenZiel(Ameise ameise)
         {
             double distance = ameise.RestStrecke;
@@ -360,7 +365,7 @@ namespace AntMe.Player.Grossenbier
             return HoleKoordinaten(ameise);
         }
 
-        public void GeheZuKoordinate(Tuple<int,int> koord)
+        public void GeheZuKoordinate(Tuple<int, int> koord)
         {
             Tuple<int, int> position = HoleKoordinaten(this);
             Tuple<int, int> differenz = new Tuple<int, int>(koord.Item1 - position.Item1, koord.Item2 - position.Item2);
@@ -372,5 +377,19 @@ namespace AntMe.Player.Grossenbier
             DreheInRichtung(richtung);
             GeheGeradeaus(distanz);
         }
+
+        //public void LaufeSpirale()
+        //{
+        //    for (int i = 0; i < 90; i++)
+        //    {
+        //        int grad = i;
+        //        int a = 10;
+        //        int x = (a * grad) * (int)Math.Cos(grad);
+        //        int y = (a * grad) * (int)Math.Sin(grad);
+        //        SpähKoordinaten.Add(new Tuple<int, int>(x, y));
+        //    }
+        //}
+
+        #endregion
     }
 }

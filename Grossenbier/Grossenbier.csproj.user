@@ -3,11 +3,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <StartAction>Program</StartAction>
     <StartProgram>C:\Program Files (x86)\AntMe 1.7\AntMe.exe</StartProgram>
-    <StartArguments>/file="C:\Users\Lennart\Documents\GitHub\AntMe_ISY\Grossenbier\bin\AntMe.Player.Grossenbier.dll"</StartArguments>
+    <StartArguments>/file="C:\Users\Daniel\Documents\GitHub\AntMe_ISY\Grossenbier\bin\AntMe.Player.Grossenbier.dll"</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <StartAction>Program</StartAction>
     <StartProgram>C:\Program Files (x86)\AntMe 1.7\AntMe.exe</StartProgram>
-    <StartArguments>/file="C:\Users\Lennart\Documents\GitHub\AntMe_ISY\Grossenbier\bin\AntMe.Player.Grossenbier.dll"</StartArguments>
+    <StartArguments>/file="C:\Users\Daniel\Documents\GitHub\AntMe_ISY\Grossenbier\bin\AntMe.Player.Grossenbier.dll"</StartArguments>
   </PropertyGroup>
 </Project>
