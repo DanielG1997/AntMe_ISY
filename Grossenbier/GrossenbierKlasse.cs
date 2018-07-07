@@ -64,7 +64,7 @@ namespace AntMe.Player.Grossenbier
         public static bool Späherswitch = false;
         bool apfeltarget = false;
         public static Spielobjekt bau = null;
-        public static HashSet<Obst> Äpfel = new HashSet<Obst>();
+        public static HashSet<Tuple<Obst, int>> Äpfel = new HashSet<Tuple<Obst, int>>();
         public static Tuple<int, int> GenaueBauKoordinaten = null;
         Ameise target = null;
         Basisameise kriegerziel = null;
@@ -92,7 +92,7 @@ namespace AntMe.Player.Grossenbier
                 Späherswitch = true;
                 return "Krieger";
             }
-            else if (anzahl["Störer"] < 10)
+            else if (anzahl["Störer"] < 6)
             {
                 return "Störer";
             }
@@ -114,9 +114,9 @@ namespace AntMe.Player.Grossenbier
         {
             if(Kaste == "Krieger")
             {
-                if(GenaueBauKoordinaten != null && Hilferuf.Count == 0 && kriegerziel == null)
+                if (GenaueBauKoordinaten != null && Hilferuf.Count == 0 && kriegerziel == null)
                 {
-                    GeheZuKoordinate(AddiereTuple(GenaueBauKoordinaten, new Tuple<int, int>(Zufall.Zahl(-100, 100), Zufall.Zahl(-100, 100))));
+                    GeheZuKoordinate(AddiereTuple(GenaueBauKoordinaten, new Tuple<int, int>(Zufall.Zahl(-50, 50), Zufall.Zahl(-50, 50))));
                 }
                 if(Hilferuf.Count > 0 && kriegerziel == null)
                 {
@@ -142,18 +142,16 @@ namespace AntMe.Player.Grossenbier
                 }
             }else if(Kaste == "Störer")
             {
-                foreach(Obst o in Äpfel)
-                {
+                for (int i = Äpfel.Count - 1; i >= 0; i--)
+                {                    
                     if(GenaueBauKoordinaten != null)
                     {
-                        int Bauentfernung = (int)(Math.Sqrt(Math.Pow(GenaueBauKoordinaten.Item1- HoleKoordinaten(o).Item1, 2) + Math.Pow(GenaueBauKoordinaten.Item2 - HoleKoordinaten(o).Item2, 2)));
-                        if(Bauentfernung < 300)
+                        int Bauentfernung = (int)(Math.Sqrt(Math.Pow(GenaueBauKoordinaten.Item1- HoleKoordinaten(Äpfel.ElementAt(i).Item1).Item1, 2) + Math.Pow(GenaueBauKoordinaten.Item2 - HoleKoordinaten(Äpfel.ElementAt(i).Item1).Item2, 2)));
+                        if(Bauentfernung < 200 && Äpfel.ElementAt(i).Item2 < 3)
                         {
-                            apfeltarget = true; 
-                            Denke("Aktives Stören");
-                            //GeheZuKoordinate(HoleKoordinaten(o));
-                            GeheZuZiel(o);
-                            Nimm(o);
+                            apfeltarget = true;
+                            GeheZuZiel(Äpfel.ElementAt(i).Item1);
+                            Nimm(Äpfel.ElementAt(i).Item1);
 
                             Tuple<int, int> position = HoleKoordinaten(this);
                             Tuple<int, int> differenz = new Tuple<int, int>(GenaueBauKoordinaten.Item1 - position.Item1, GenaueBauKoordinaten.Item2 - position.Item2);
@@ -211,7 +209,7 @@ namespace AntMe.Player.Grossenbier
                 Hilferuf.Add(this);
                 Hilferufe++;
             }
-            if (Kaste == "Störer" && AktuelleLast > 0 && (int)(Math.Sqrt(Math.Pow(GenaueBauKoordinaten.Item1 - HoleKoordinaten(this).Item1, 2) + Math.Pow(GenaueBauKoordinaten.Item2 - HoleKoordinaten(this).Item2, 2))) > 300)
+            if (Kaste == "Störer" && AktuelleLast > 0 && (int)(Math.Sqrt(Math.Pow(GenaueBauKoordinaten.Item1 - HoleKoordinaten(this).Item1, 2) + Math.Pow(GenaueBauKoordinaten.Item2 - HoleKoordinaten(this).Item2, 2))) > 205)
             {
                 LasseNahrungFallen();
                 apfeltarget = false;
@@ -226,7 +224,7 @@ namespace AntMe.Player.Grossenbier
             }
             for (int i = Äpfel.Count-1; i >= 0; i--)
             {
-                if(Äpfel.ElementAt(i).Menge == 0)
+                if(Äpfel.ElementAt(i).Item1.Menge == 0)
                 {
                     Äpfel.Remove(Äpfel.ElementAt(i));
                 }
@@ -261,7 +259,7 @@ namespace AntMe.Player.Grossenbier
         /// <param name="obst">Das gesichtete Stück Obst</param>
         public override void Sieht(Obst obst)
         {
-            Äpfel.Add(obst);
+            Äpfel.Add(new Tuple<Obst, int>(obst, 0));
         }
 
         /// <summary>
@@ -368,7 +366,7 @@ namespace AntMe.Player.Grossenbier
                     {
                         this.Denke("Charrrrrge");
                         FangeAb(ameise);
-                        if (Koordinate.BestimmeEntfernung(ameise, this) < 25)
+                        if (Koordinate.BestimmeEntfernung(ameise, this) < 20)
                         {
                             GreifeAn(ameise);
                         }
