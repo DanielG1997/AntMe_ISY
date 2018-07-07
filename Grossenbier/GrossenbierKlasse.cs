@@ -39,18 +39,31 @@ namespace AntMe.Player.Grossenbier
     [Kaste(
         Name = "Krieger",                  // Name der Berufsgruppe
         AngriffModifikator = 2,             // Angriffsstärke einer Ameise
-        DrehgeschwindigkeitModifikator = -1, // Drehgeschwindigkeit einer Ameise
+        DrehgeschwindigkeitModifikator = 0, // Drehgeschwindigkeit einer Ameise
         EnergieModifikator = -1,             // Lebensenergie einer Ameise
         GeschwindigkeitModifikator = 2,     // Laufgeschwindigkeit einer Ameise
         LastModifikator = -1,                // Tragkraft einer Ameise
         ReichweiteModifikator = -1,          // Ausdauer einer Ameise
-        SichtweiteModifikator = 0           // Sichtweite einer Ameise
+        SichtweiteModifikator = -1           // Sichtweite einer Ameise
+    )]
+
+    [Kaste(
+        Name = "Störer",                  // Name der Berufsgruppe
+        AngriffModifikator = -1,             // Angriffsstärke einer Ameise
+        DrehgeschwindigkeitModifikator = -1, // Drehgeschwindigkeit einer Ameise
+        EnergieModifikator = 0,             // Lebensenergie einer Ameise
+        GeschwindigkeitModifikator = 2,     // Laufgeschwindigkeit einer Ameise
+        LastModifikator = 2,                // Tragkraft einer Ameise
+        ReichweiteModifikator = -1,          // Ausdauer einer Ameise
+        SichtweiteModifikator = -1           // Sichtweite einer Ameise
     )]
     public class GrossenbierKlasse : Basisameise
     {
 
+        public static bool Späherswitch = false;
         public static Spielobjekt bau = null;
         public static SortedSet<Tuple<int,int>> GegnerBauKoordinaten = new SortedSet<Tuple<int, int>>();
+        public static HashSet<Obst> Äpfel = new HashSet<Obst>();
         public static Tuple<int, int> GenaueBauKoordinaten = null;
         Ameise target = null;
         //public static List<Tuple<int,int>> SpähKoordinaten = new List<Tuple<int, int>>();
@@ -68,8 +81,19 @@ namespace AntMe.Player.Grossenbier
         public override string BestimmeKaste(Dictionary<string, int> anzahl)
         {
             // Gibt den Namen der betroffenen Kaste zurück.
-            if (anzahl["Späher"] < 10)
+            if (Späherswitch == false && anzahl["Späher"] < 10)
                 return "Späher";
+            else if (Späherswitch == true && anzahl["Späher"] < 5)
+                return "Späher";
+            else if(anzahl["Krieger"] < 25)
+            {
+                Späherswitch = true;
+                return "Krieger";
+            }
+            else if (anzahl["Störer"] < 5)
+            {
+                return "Störer";
+            }
             else
                 return "Krieger";
         }   
@@ -96,16 +120,50 @@ namespace AntMe.Player.Grossenbier
                 {
                     GeheZuKoordinate(AddiereTuple(GenaueBauKoordinaten, new Tuple<int, int>(Zufall.Zahl(-100, 100), Zufall.Zahl(-100, 100))));
                 }
-            }else
-            if(Kaste == "Späher" && GegnerBauKoordinaten.Count > 30)
+            }else if(Kaste == "Späher")
             {
-                GeheZuKoordinate(AddiereTuple(GegnerBauKoordinaten.ElementAt(Zufall.Zahl(GegnerBauKoordinaten.Count)), new Tuple<int, int>(Zufall.Zahl(-50, 50), Zufall.Zahl(50, 50))));
-            }else
+                if (Kaste == "Späher" && GenaueBauKoordinaten != null)
+                {
+                    GeheZuKoordinate(AddiereTuple(GenaueBauKoordinaten, new Tuple<int, int>(Zufall.Zahl(-100, 100), Zufall.Zahl(-100, 100))));
+                }
+                else
+                {
+                    //LaufeSpirale();
+                    //GeheZuKoordinate(SpähKoordinaten.ElementAt(0));
+                    GeheGeradeaus();
+                }
+            }else if(Kaste == "Störer")
             {
-                //LaufeSpirale();
-                //GeheZuKoordinate(SpähKoordinaten.ElementAt(0));
-                GeheGeradeaus();
+                foreach(Obst o in Äpfel)
+                {
+                    if(GenaueBauKoordinaten != null)
+                    {
+                        int Bauentfernung = (int)(Math.Sqrt(Math.Pow(GenaueBauKoordinaten.Item1- HoleKoordinaten(o).Item1, 2) + Math.Pow(GenaueBauKoordinaten.Item2 - HoleKoordinaten(o).Item2, 2)));
+                        if(Bauentfernung < 500)
+                        {
+                            //GeheZuKoordinate(HoleKoordinaten(o));
+                            Nimm(o);
+
+                            Tuple<int, int> position = HoleKoordinaten(this);
+                            Tuple<int, int> differenz = new Tuple<int, int>(GenaueBauKoordinaten.Item1 - position.Item1, GenaueBauKoordinaten.Item2 - position.Item2);
+
+                            int distanz = (int)(Math.Sqrt(differenz.Item1 * differenz.Item1 + differenz.Item2 * differenz.Item2));
+                            double radiant = Math.Atan2(differenz.Item2, differenz.Item1);
+                            int richtung = (int)(radiant * 360 / (2 * Math.PI));
+
+                            if (richtung >= 0)
+                                richtung -= 180;
+                            else
+                                richtung += 180;
+                            DreheInRichtung(richtung);
+                            GeheGeradeaus(250);
+                        }
+                        if(AktuelleLast == 0 && Ziel == null)
+                             GeheZuKoordinate(GenaueBauKoordinaten);
+                    }
+                }
             }
+            
         }
 
         /// <summary>
@@ -137,6 +195,8 @@ namespace AntMe.Player.Grossenbier
         /// </summary>
         public override void Tick()
         {
+            if (Kaste == "Störer")
+                Denke("Stören");
             if(bau == null)
             {
                 GeheZuBau();
@@ -167,7 +227,7 @@ namespace AntMe.Player.Grossenbier
         /// <param name="obst">Das gesichtete Stück Obst</param>
         public override void Sieht(Obst obst)
         {
-            
+            Äpfel.Add(obst);
         }
 
         /// <summary>
@@ -287,11 +347,11 @@ namespace AntMe.Player.Grossenbier
                     if (ameise.AktuelleGeschwindigkeit < this.MaximaleGeschwindigkeit || ameise.AktuelleLast > 0)
                     {
                         this.Denke("Charrrrrge");
-                        //FangeAb(ameise);
-                        //if (Koordinate.BestimmeEntfernung(ameise, this) < 25)
-                        //{
+                        FangeAb(ameise);
+                        if (Koordinate.BestimmeEntfernung(ameise, this) < 25)
+                        {
                             GreifeAn(ameise);
-                        //}
+                        }
                     }
                 }             
             }
