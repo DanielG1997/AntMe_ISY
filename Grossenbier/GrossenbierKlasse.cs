@@ -62,7 +62,6 @@ namespace AntMe.Player.Grossenbier
 
         public static bool Späherswitch = false;
         public static Spielobjekt bau = null;
-        public static SortedSet<Tuple<int,int>> GegnerBauKoordinaten = new SortedSet<Tuple<int, int>>();
         public static HashSet<Obst> Äpfel = new HashSet<Obst>();
         public static Tuple<int, int> GenaueBauKoordinaten = null;
         Ameise target = null;
@@ -112,10 +111,6 @@ namespace AntMe.Player.Grossenbier
         {
             if(Kaste == "Krieger")
             {
-                //if(GegnerBauKoordinaten.Count != 0)
-                //{
-                //    GeheZuKoordinate(AddiereTuple(GegnerBauKoordinaten.ElementAt(Zufall.Zahl(GegnerBauKoordinaten.Count)), new Tuple<int, int>(Zufall.Zahl(-100, 100), Zufall.Zahl(-100, 100))));
-                //}
                 if(GenaueBauKoordinaten != null)
                 {
                     GeheZuKoordinate(AddiereTuple(GenaueBauKoordinaten, new Tuple<int, int>(Zufall.Zahl(-100, 100), Zufall.Zahl(-100, 100))));
@@ -141,7 +136,6 @@ namespace AntMe.Player.Grossenbier
                         int Bauentfernung = (int)(Math.Sqrt(Math.Pow(GenaueBauKoordinaten.Item1- HoleKoordinaten(o).Item1, 2) + Math.Pow(GenaueBauKoordinaten.Item2 - HoleKoordinaten(o).Item2, 2)));
                         if(Bauentfernung < 500)
                         {
-                            //GeheZuKoordinate(HoleKoordinaten(o));
                             Nimm(o);
 
                             Tuple<int, int> position = HoleKoordinaten(this);
@@ -320,20 +314,6 @@ namespace AntMe.Player.Grossenbier
                     target = ameise;
                     GeheZuKoordinate(HoleKoordinaten(ameise));
                 }                
-                if (ameise.RestStrecke < 2000)
-                {
-
-                    if (GegnerBauKoordinaten.Count < 1500)
-                    {
-                        GegnerBauKoordinaten.Add(HoleAmeisenZiel(ameise));
-                    }
-                    else
-                    {
-                        GegnerBauKoordinaten.Remove(GegnerBauKoordinaten.ElementAt(0));
-                        GegnerBauKoordinaten.Add(HoleAmeisenZiel(ameise));
-                    }
-
-                }
                 if (Kaste == "Späher")
                 {
                     if (ameise.AktuelleLast > 0)
@@ -497,20 +477,7 @@ namespace AntMe.Player.Grossenbier
             DreheInRichtung((int) (Math.Asin(sin_alpha) * 180 / Math.PI));
             GeheGeradeaus((int) (Math.Cos((Math.Asin(sin_alpha) * 180 / Math.PI)) * Math.Sqrt(Math.Pow(SubtrahiereTuple(A, B).Item1, 2) + Math.Pow(SubtrahiereTuple(A, B).Item2, 2))));
 
-
         }
-
-        //public void LaufeSpirale()
-        //{
-        //    for (int i = 0; i < 90; i++)
-        //    {
-        //        int grad = i;
-        //        int a = 10;
-        //        int x = (a * grad) * (int)Math.Cos(grad);
-        //        int y = (a * grad) * (int)Math.Sin(grad);
-        //        SpähKoordinaten.Add(new Tuple<int, int>(x, y));
-        //    }
-        //}
 
         #endregion
     }
