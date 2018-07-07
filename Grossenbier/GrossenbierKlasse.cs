@@ -141,8 +141,11 @@ namespace AntMe.Player.Grossenbier
                         int Bauentfernung = (int)(Math.Sqrt(Math.Pow(GenaueBauKoordinaten.Item1- HoleKoordinaten(o).Item1, 2) + Math.Pow(GenaueBauKoordinaten.Item2 - HoleKoordinaten(o).Item2, 2)));
                         if(Bauentfernung < 500)
                         {
+                            Denke("Aktiv Stören");
                             //GeheZuKoordinate(HoleKoordinaten(o));
+                            GeheZuZiel(o);
                             Nimm(o);
+                            GeheZuKoordinate(HoleKoordinaten(bau));
 
                             Tuple<int, int> position = HoleKoordinaten(this);
                             Tuple<int, int> differenz = new Tuple<int, int>(GenaueBauKoordinaten.Item1 - position.Item1, GenaueBauKoordinaten.Item2 - position.Item2);
@@ -156,7 +159,7 @@ namespace AntMe.Player.Grossenbier
                             else
                                 richtung += 180;
                             DreheInRichtung(richtung);
-                            GeheGeradeaus(250);
+                            GeheGeradeaus(100);
                         }
                         if(AktuelleLast == 0 && Ziel == null)
                              GeheZuKoordinate(GenaueBauKoordinaten);
@@ -195,8 +198,18 @@ namespace AntMe.Player.Grossenbier
         /// </summary>
         public override void Tick()
         {
-            if (Kaste == "Störer")
-                Denke("Stören");
+            
+            if(Kaste == "Störer" && AktuelleLast > 0 && (int)(Math.Sqrt(Math.Pow(GenaueBauKoordinaten.Item1 - HoleKoordinaten(this).Item1, 2) + Math.Pow(GenaueBauKoordinaten.Item2 - HoleKoordinaten(this).Item2, 2))) > 300)
+            {
+                GeheZuKoordinate(HoleKoordinaten(bau));
+            }
+            for (int i = Äpfel.Count-1; i >= 0; i--)
+            {
+                if(Äpfel.ElementAt(i).Menge == 0)
+                {
+                    Äpfel.Remove(Äpfel.ElementAt(i));
+                }
+            }
             if(bau == null)
             {
                 GeheZuBau();
