@@ -51,6 +51,8 @@ namespace AntMe.Player.Grossenbier
 
         public static Spielobjekt bau = null;
         public static SortedSet<Tuple<int,int>> GegnerBauKoordinaten = new SortedSet<Tuple<int, int>>();
+        public static Tuple<int, int> GenaueBauKoordinaten = null;
+        Ameise target = null;
         //public static List<Tuple<int,int>> SpähKoordinaten = new List<Tuple<int, int>>();
 
         #region Kasten
@@ -86,9 +88,13 @@ namespace AntMe.Player.Grossenbier
         {
             if(Kaste == "Krieger")
             {
-                if(GegnerBauKoordinaten.Count != 0)
+                //if(GegnerBauKoordinaten.Count != 0)
+                //{
+                //    GeheZuKoordinate(AddiereTuple(GegnerBauKoordinaten.ElementAt(Zufall.Zahl(GegnerBauKoordinaten.Count)), new Tuple<int, int>(Zufall.Zahl(-100, 100), Zufall.Zahl(-100, 100))));
+                //}
+                if(GenaueBauKoordinaten != null)
                 {
-                    GeheZuKoordinate(AddiereTuple(GegnerBauKoordinaten.ElementAt(Zufall.Zahl(GegnerBauKoordinaten.Count)), new Tuple<int, int>(Zufall.Zahl(-100, 100), Zufall.Zahl(-100, 100))));
+                    GeheZuKoordinate(AddiereTuple(GenaueBauKoordinaten, new Tuple<int, int>(Zufall.Zahl(-100, 100), Zufall.Zahl(-100, 100))));
                 }
             }else
             if(Kaste == "Späher" && GegnerBauKoordinaten.Count > 30)
@@ -136,6 +142,15 @@ namespace AntMe.Player.Grossenbier
                 GeheZuBau();
                 bau = Ziel;
                 BleibStehen();
+            }
+
+            if (target != null && GenaueBauKoordinaten == null)
+            {
+                if (target.AktuelleLast == 0)
+                {
+                    GenaueBauKoordinaten = HoleKoordinaten(target);
+                }
+                GeheZuKoordinate(HoleKoordinaten(target));
             }
 
         }
@@ -237,9 +252,15 @@ namespace AntMe.Player.Grossenbier
         /// <param name="ameise">Erspähte feindliche Ameise</param>
         public override void SiehtFeind(Ameise ameise)
         {
+             
             if(ameise.AktuelleLast == ameise.MaximaleLast)
             {
-                if(ameise.RestStrecke < 2000)
+                if (target == null && GenaueBauKoordinaten == null)
+                {
+                    target = ameise;
+                    GeheZuKoordinate(HoleKoordinaten(ameise));
+                }                
+                if (ameise.RestStrecke < 2000)
                 {
 
                     if (GegnerBauKoordinaten.Count < 1500)
@@ -265,11 +286,12 @@ namespace AntMe.Player.Grossenbier
                 {
                     if (ameise.AktuelleGeschwindigkeit < this.MaximaleGeschwindigkeit || ameise.AktuelleLast > 0)
                     {
-                        FangeAb(ameise);
-                        if (Koordinate.BestimmeEntfernung(ameise, this) < 25)
-                        {
+                        this.Denke("Charrrrrge");
+                        //FangeAb(ameise);
+                        //if (Koordinate.BestimmeEntfernung(ameise, this) < 25)
+                        //{
                             GreifeAn(ameise);
-                        }
+                        //}
                     }
                 }             
             }
