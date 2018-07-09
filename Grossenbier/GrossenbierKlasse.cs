@@ -75,7 +75,7 @@ namespace AntMe.Player.Grossenbier
         // Bool, der sagt, ob ein Apfel zum wegziehen gefunden ist
         public bool zielapfel = false;
 
-        //
+        // unser Bau
         public static Spielobjekt bau = null;
 
         // Ein HashSet mit Apfelobjekten
@@ -84,10 +84,10 @@ namespace AntMe.Player.Grossenbier
         // Ein Tuple, also ein Paar aus x und y Koordinate, wo nachher die Koordnaten des Gegnerischen Baus gespeichert sind
         public static Tuple<int, int> GenaueBauKoordinaten = null;
 
-        //
+        // Feindliche Ameise
         Ameise ziel = null;
 
-        //
+        // Störer, den die Kriegerameise helfen will
         Basisameise kriegerziel = null;
 
         #region Kasten
@@ -241,17 +241,19 @@ namespace AntMe.Player.Grossenbier
         /// </summary>
         public override void Tick()
         {
-
+            // Wenn 2 Gegner in der Nähe des Störers ist, ruft sie um Hilfe, damit die Gegner beseitigt werden.
             if(Kaste == "Störer" && AktuelleLast > 0 && AnzahlFremderAmeisenInSichtweite > 2 && Hilferufe < 1) {
                 Hilferuf.Add(this);
                 Hilferufe++;
             }
+            // Und wenn der Apfel weit genug weg ist, wird der Apfel wieder fallen gelassen.
             if (Kaste == "Störer" && AktuelleLast > 0 && (int)(Math.Sqrt(Math.Pow(GenaueBauKoordinaten.Item1 - HoleKoordinaten(this).Item1, 2) + Math.Pow(GenaueBauKoordinaten.Item2 - HoleKoordinaten(this).Item2, 2))) > 205)
             {
                 LasseNahrungFallen();
                 zielapfel = false;
                 Hilferufe = 0;
             }
+            // Krieger soll zu unserem Störer hingehen
             if(kriegerziel != null)
             {
                 if (Koordinate.BestimmeEntfernung(this, kriegerziel) < 20 && AnzahlFremderAmeisenInSichtweite == 0)
@@ -259,6 +261,7 @@ namespace AntMe.Player.Grossenbier
                     kriegerziel = null;
                 }
             }
+            // Sind Äpfel weg, werden sie auch aus der Liste entfernt
             for (int i = Äpfel.Count-1; i >= 0; i--)
             {
                 if(Äpfel.ElementAt(i).Item1.Menge == 0)
@@ -266,6 +269,8 @@ namespace AntMe.Player.Grossenbier
                     Äpfel.Remove(Äpfel.ElementAt(i));
                 }
             }
+
+            // Positionsbestimmung von unserem Bau
             if(bau == null)
             {
                 GeheZuBau();
@@ -273,6 +278,7 @@ namespace AntMe.Player.Grossenbier
                 BleibStehen();
             }
 
+            // Hat die Ameise ihre Last noch nicht abgelegt, soll sie solange verfolgt werden
             if (ziel != null && GenaueBauKoordinaten == null)
             {
                 if (ziel.AktuelleLast == 0)
@@ -296,6 +302,7 @@ namespace AntMe.Player.Grossenbier
         /// <param name="obst">Das gesichtete Stück Obst</param>
         public override void Sieht(Obst obst)
         {
+            // Apfel wurde gefunden und wird dem Set hinzugefügt
             Äpfel.Add(new Tuple<Obst, int>(obst, 0));
         }
 
@@ -381,7 +388,7 @@ namespace AntMe.Player.Grossenbier
         /// <param name="ameise">Erspähte feindliche Ameise</param>
         public override void SiehtFeind(Ameise ameise)
         {
-             
+            // ist die gegnerische Ameise voll beladen, wird sie verfolgt. 
             if(ameise.AktuelleLast == ameise.MaximaleLast)
             {
                 if (ziel == null && GenaueBauKoordinaten == null)
@@ -389,6 +396,7 @@ namespace AntMe.Player.Grossenbier
                     ziel = ameise;
                     GeheZuKoordinate(HoleKoordinaten(ameise));
                 }                
+                // Alle Sammler des Gegners werden von Spähern verfolgt
                 if (Kaste == "Späher")
                 {
                     if (ameise.AktuelleLast > 0)
@@ -397,11 +405,13 @@ namespace AntMe.Player.Grossenbier
 
                     }
                 }
+                // Wenn keiner Ameise zu helfen ist oder sie maximal 30 weg ist, greifen wir an
                 else if (Kaste == "Krieger" && (kriegerziel == null || (kriegerziel != null && Koordinate.BestimmeEntfernung(this, kriegerziel) < 30)))
                 {
                     if (ameise.AktuelleGeschwindigkeit < this.MaximaleGeschwindigkeit || ameise.AktuelleLast > 0)
                     {
-                        this.Denke("Charrrrrge");
+                        this.Denke("Hasta la vista");
+                        // dabei versuchen wir Laufwege zu kreuzen
                         FangeAb(ameise);
                         if (Koordinate.BestimmeEntfernung(ameise, this) < 20)
                         {
@@ -432,6 +442,7 @@ namespace AntMe.Player.Grossenbier
         /// <param name="ameise">Angreifende Ameise</param>
         public override void WirdAngegriffen(Ameise ameise)
         {
+            // Werden wir angeriffen, greifen wir zurück an.
             if(Kaste == "Krieger")
             {
                 GreifeAn(ameise);
@@ -452,7 +463,14 @@ namespace AntMe.Player.Grossenbier
         #endregion
 
         #region Methoden
+        // Unsere Hilfsmethoden
 
+        /// <summary>
+        /// Diese Methode wird aufgerufen, um die Koordinaten von dem Ziel der 
+        /// gegnerischen Ameise zu ermitteln.
+        /// </summary>
+        /// <param name="ameise"> Feindliche Ameise </param>
+        /// <returns> Ein Tuple (x,y) mit den Koordinaten des Ameise </returns>
         public Tuple<int,int> HoleAmeisenZiel(Ameise ameise)
         {
             double distance = ameise.RestStrecke;
@@ -466,16 +484,34 @@ namespace AntMe.Player.Grossenbier
             return new Tuple<int, int>(x, y);
         }
 
+        /// <summary>
+        /// Addiert Tuple
+        /// </summary>
+        /// <param name="a"> erste Koordinaten </param>
+        /// <param name="b"> zweite Koordinaten </param>
+        /// <returns> Summe </returns>
         public Tuple<int, int> AddiereTuple(Tuple<int,int> a, Tuple<int, int> b)
         {
             return new Tuple<int, int>(a.Item1 + b.Item1, a.Item2 + b.Item2);
         }
 
+        /// <summary>
+        /// Subtrahiert Tuple
+        /// </summary>
+        /// <param name="a"> erste Koordinaten </param>
+        /// <param name="b"> zweite Koordinaten </param>
+        /// <returns> Differenz </returns>
         public Tuple<int, int> SubtrahiereTuple(Tuple<int, int> a, Tuple<int, int> b)
         {
             return new Tuple<int, int>(a.Item1 - b.Item1, a.Item2 - b.Item2);
         }
 
+        /// <summary>
+        /// Diese Methode wird aufgerufen, um die Koordinaten eines Spielobjekts zu 
+        /// ermittel.
+        /// </summary>
+        /// <param name="spielobjekt"> Objekt im Spielfeld </param>
+        /// <returns> Koordinaten als Tuple </returns>
         public Tuple<int,int> HoleKoordinaten(Spielobjekt spielobjekt)
         {
             if(bau != null) { 
@@ -495,6 +531,11 @@ namespace AntMe.Player.Grossenbier
             return HoleKoordinaten(spielobjekt);
         }
 
+        /// <summary>
+        /// Diese Methode ermittelt die Koordinaten für Ameisen auf dem Spielfeld.
+        /// </summary>
+        /// <param name="ameise"> Ameise </param>
+        /// <returns> Koordinaten als Tuple </returns>
         public Tuple<int, int> HoleKoordinaten(Basisameise ameise)
         {
             if (bau != null)
@@ -515,6 +556,11 @@ namespace AntMe.Player.Grossenbier
             return HoleKoordinaten(ameise);
         }
 
+        /// <summary>
+        /// Diese Methode bestimmt die Richtung und Distanz zu den Zielkoordinaten,
+        /// um dort hin zu gelangen.
+        /// </summary>
+        /// <param name="koord"> Zielkoordinaten </param>
         public void GeheZuKoordinate(Tuple<int, int> koord)
         {
             Tuple<int, int> position = HoleKoordinaten(this);
@@ -528,6 +574,12 @@ namespace AntMe.Player.Grossenbier
             GeheGeradeaus(distanz);
         }
 
+        /// <summary>
+        /// Diese Methode wird aufgerufen, um den Laufweg gegnerischer Ameisen zu kreuzen.
+        /// Im Default rennen Ameisen andere Ameisen bloss hinterher, hier wird jedoch mithilfe von
+        /// Trigonometrie ein Weg berechnet, um schneller zum Gegner zu gelangen.
+        /// </summary>
+        /// <param name="ameise"> Feindliche Ameise </param>
         public void FangeAb(Ameise ameise)
         {
             Tuple<int, int> A = HoleKoordinaten(this);
