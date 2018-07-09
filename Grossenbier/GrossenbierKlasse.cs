@@ -25,6 +25,8 @@ namespace AntMe.Player.Grossenbier
     /// Kasten stellen "Berufsgruppen" innerhalb deines Ameisenvolkes dar. Du kannst hier mit
     /// den Fähigkeiten einzelner Ameisen arbeiten. Wie genau das funktioniert kannst du der 
     /// Lektion zur Spezialisierung von Ameisen entnehmen (http://wiki.antme.net/de/Lektion7).
+    
+    // Ameisen, die das Spielfeld erkunden sollen
     [Kaste(
         Name = "Späher",                  // Name der Berufsgruppe
         AngriffModifikator = -1,             // Angriffsstärke einer Ameise
@@ -36,6 +38,7 @@ namespace AntMe.Player.Grossenbier
         SichtweiteModifikator = 1           // Sichtweite einer Ameise
     )]
 
+    // Ameisen zum angreifen
     [Kaste(
         Name = "Krieger",                  // Name der Berufsgruppe
         AngriffModifikator = 2,             // Angriffsstärke einer Ameise
@@ -47,6 +50,7 @@ namespace AntMe.Player.Grossenbier
         SichtweiteModifikator = -1           // Sichtweite einer Ameise
     )]
 
+    // Ameisen, die Äpfel beim Gegner wegziehen sollen
     [Kaste(
         Name = "Störer",                  // Name der Berufsgruppe
         AngriffModifikator = -1,             // Angriffsstärke einer Ameise
@@ -59,14 +63,31 @@ namespace AntMe.Player.Grossenbier
     )]
     public class GrossenbierKlasse : Basisameise
     {
+        // Anzahl der Hilferufe der Störerameisen
         public int Hilferufe = 0;
+
+        // Liste mit Hilferufe der Ameisen
         public static List<Basisameise> Hilferuf = new List<Basisameise>();
+
+        // Bool, der angibt, wann wir die Produktion von Spähern veräandern
         public static bool Späherswitch = false;
-        bool zielapfel = false;
+
+        // Bool, der sagt, ob ein Apfel zum wegziehen gefunden ist
+        public bool zielapfel = false;
+
+        //
         public static Spielobjekt bau = null;
+
+        // Ein HashSet mit Apfelobjekten
         public static HashSet<Tuple<Obst, int>> Äpfel = new HashSet<Tuple<Obst, int>>();
+
+        // Ein Tuple, also ein Paar aus x und y Koordinate, wo nachher die Koordnaten des Gegnerischen Baus gespeichert sind
         public static Tuple<int, int> GenaueBauKoordinaten = null;
+
+        //
         Ameise ziel = null;
+
+        //
         Basisameise kriegerziel = null;
 
         #region Kasten
@@ -82,19 +103,24 @@ namespace AntMe.Player.Grossenbier
         public override string BestimmeKaste(Dictionary<string, int> anzahl)
         {
             // Gibt den Namen der betroffenen Kaste zurück.
+            // Zuerst sollen Späher produziert werden
             if (Späherswitch == false && anzahl["Späher"] < 10)
                 return "Späher";
+            //... und sobald 10 erreicht sind, sollen immer nur 5 nachproduziert werden.
             else if (Späherswitch == true && anzahl["Späher"] < 5)
                 return "Späher";
+            // Wenn weniger als 20 Krieger auf dem Feld sind, sollen Krieger produziert werden.
             else if(anzahl["Krieger"] < 20)
             {
                 Späherswitch = true;
                 return "Krieger";
             }
+            // Und dann sollen 6 Störer produziert werden.
             else if (anzahl["Störer"] < 6)
             {
                 return "Störer";
             }
+            // Default sind Krieger
             else
                 return "Krieger";
         }   
@@ -111,22 +137,26 @@ namespace AntMe.Player.Grossenbier
         /// </summary>
         public override void Wartet()
         {
+            // Wenn der Krieger nichts zutun hat, kein Störer Hilfe benötigt und der Gegnerische Bau bekannt ist
             if(Kaste == "Krieger")
             {
                 if (GenaueBauKoordinaten != null && Hilferuf.Count == 0 && kriegerziel == null)
                 {
+                    // ...soll der Krieger sich zufäälig um den Bau plazieren.
                     GeheZuKoordinate(AddiereTuple(GenaueBauKoordinaten, new Tuple<int, int>(Zufall.Zahl(-50, 50), Zufall.Zahl(-50, 50))));
                 }
                 if(Hilferuf.Count > 0 && kriegerziel == null)
                 {
+                    // hat eine Ameise ein Hilferuf getätigt, so wird es als neue Aufgabe hinzugefügt, um ihr zu helfen.
                     kriegerziel = Hilferuf.ElementAt(0);
                     Hilferuf.Remove(Hilferuf.ElementAt(0));
                 }
                 if(kriegerziel != null)
                 {
+                    // Dazu muss die Ameise den Bau verlassen und zu dieser Ameise hingehen.
                     GeheZuKoordinate(HoleKoordinaten(kriegerziel));
                 }
-
+            // Wenn der Späher wartet, soll er erstmal den gegnerischen Bau finden und ihn mitteilen
             }else if(Kaste == "Späher")
             {
                 if (Kaste == "Späher" && GenaueBauKoordinaten != null)
@@ -135,17 +165,22 @@ namespace AntMe.Player.Grossenbier
                 }
                 else
                 {
+                    // ...und geht dazu zufällig über das ganze Feld.
                     GeheGeradeaus();
                 }
+            // Störer sollen Äpfel von der gegnerischen Basis wegziehen
             }else if(Kaste == "Störer")
             {
                 for (int i = Äpfel.Count - 1; i >= 0; i--)
                 {                    
                     if(GenaueBauKoordinaten != null)
                     {
+                        // Wenn ein Apfel gefunden wurde, bestimmen wir wie weit dieser weg ist
                         int Bauentfernung = (int)(Math.Sqrt(Math.Pow(GenaueBauKoordinaten.Item1- HoleKoordinaten(Äpfel.ElementAt(i).Item1).Item1, 2) + Math.Pow(GenaueBauKoordinaten.Item2 - HoleKoordinaten(Äpfel.ElementAt(i).Item1).Item2, 2)));
+                        // Und nur wenn dieser im Radius von 200 um die Basis ist, gehen wir dort hin und ziehen daran.
                         if(Bauentfernung < 200 && Äpfel.ElementAt(i).Item2 < 3)
                         {
+                            // Dazu müssen wir uns die Position des Apfels holen, um unsere Ameise dementsprechend auszurichten
                             zielapfel = true;
                             GeheZuZiel(Äpfel.ElementAt(i).Item1);
                             Nimm(Äpfel.ElementAt(i).Item1);
@@ -157,6 +192,7 @@ namespace AntMe.Player.Grossenbier
                             double radiant = Math.Atan2(differenz.Item2, differenz.Item1);
                             int richtung = (int)(radiant * 360 / (2 * Math.PI));
 
+                            // und ziehen, sobald wir angekommen sind, den Apfel 10 von der Basis weg
                             if (richtung >= 0)
                                 richtung -= 180;
                             else
@@ -164,6 +200,7 @@ namespace AntMe.Player.Grossenbier
                             DreheInRichtung(richtung);
                             GeheGeradeaus(10);
                         }
+                        // Sonst wartet sie mit den Kriegern am gegnerischen Bau
                         if(AktuelleLast == 0 && zielapfel == false)
                              GeheZuKoordinate(GenaueBauKoordinaten);
                     }
@@ -178,6 +215,8 @@ namespace AntMe.Player.Grossenbier
         /// </summary>
         public override void WirdMüde()
         {
+            // Ameisen sollen an Hungertot sterben, da sich ein regenerieren nicht lohnt
+
             //if (AktuelleEnergie < MaximaleEnergie / 2 || ZurückgelegteStrecke < Reichweite / 2)
             //    GeheZuBau();
         }
@@ -191,6 +230,7 @@ namespace AntMe.Player.Grossenbier
         /// <param name="todesart">Art des Todes</param>
         public override void IstGestorben(Todesart todesart)
         {
+            // 1vs1, Todersursache ist egal
         }
 
         /// <summary>
