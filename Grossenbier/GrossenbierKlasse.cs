@@ -470,7 +470,7 @@ namespace AntMe.Player.Grossenbier
         /// Ameise zu ermitteln.
         /// </summary>
         /// <param name="ameise"> Ameise </param>
-        /// <returns> Ein Tuple (x,y) mit den Koordinaten des Ameise </returns>
+        /// <returns> Ein Tuple (x,y) mit den Koordinaten des Ziels der Ameise </returns>
         public Tuple<int,int> HoleAmeisenZiel(Ameise ameise)
         {
             double distance = ameise.RestStrecke;
