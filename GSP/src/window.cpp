@@ -1,5 +1,4 @@
 #include "window.hpp"
-#include <glew.h>
 
 Window::Window(unsigned int width, unsigned int height) {
   SDL_Init(SDL_INIT_VIDEO);
@@ -17,9 +16,9 @@ Window::Window(unsigned int width, unsigned int height) {
   glewExperimental = GL_TRUE;
   glewInit();
 }
-//
-//void Window::swap(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha) {
-//	glClearColor(red, green, blue, alpha);
-//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//	SDL_GL_SwapWindow(window_);
-//}
+
+void Window::swap(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha) {
+	glClearColor(red, green, blue, alpha);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	SDL_GL_SwapWindow(window_);
+}
