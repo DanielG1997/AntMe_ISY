@@ -142,7 +142,7 @@ void Window::drawTetraeder() {
 						 v1,n3,v3,n3,v4,n3,
 						 v1,n4,v2,n4,v4,n4 
 					   };
-	int angle = 180;
+	int angle = 00;
 	float values[16] = {
 		cos(angle * M_PI/180), 0, sin(angle * M_PI / 180), 0,
 		0, 1, 0, 0,
@@ -150,25 +150,30 @@ void Window::drawTetraeder() {
 		0, 0, 0, 1
 	};
 	const glm::mat4 rotationY = glm::make_mat4(values);
+	const glm::mat4 inverseY = glm::inverse(rotationY);
 
 	const char* vertexsource = "#version 330 core\n"
 							   "uniform mat4 model_to_world_matrix;\n"
+							   "uniform mat4 inverse_model_to_world_matrix;\n"
 							   "layout(location = 0) in vec3 vertex_position;\n"
+								"layout(location = 1) in vec3 normal_position;\n"
+								"out vec4 vertex_normal_worldspace;\n"
 							   "void main() {\n"
 								"gl_Position = model_to_world_matrix * vec4((vertex_position), 1.0f);\n"
+								"vertex_normal_worldspace = inverse_model_to_world_matrix * vec4((normal_position), 1.0f);\n"
 							  /* "gl_Position.xyz = vertex_position;\n"
 							   "gl_Position.w = 1.0;\n"*/
 							   "}";
 
 	const char* fragmentsource = "#version 330 core\n"
-								 "in vec3 vertex_normal_worldspace;\n"
+								 "in vec4 vertex_normal_worldspace;\n"
 								 "uniform vec3 user_color;\n"
 								 "layout(location = 0) out vec3 color;\n"
 								 "void main() {\n"
-								// "float nz = vertex_normal_worldspace.z\n;"
-								// "float factor = 0.5 + 0.5 * abs(nz);\n"
-								// "color = factor * user_color;\n"
-								   "color = user_color;\n"
+								 "float nz = vertex_normal_worldspace.z\n;"
+								 "float factor = 0.5 + 0.5 * abs(nz);\n"
+								 "color = factor * user_color;\n"
+								 // "color = user_color;\n"
 								 "}";
 
 	int success;
@@ -228,14 +233,17 @@ void Window::drawTetraeder() {
 	glUseProgram(shaderprogram);
 	glEnable(GL_DEPTH_TEST);
 	GLint uniformmatrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
+	GLint inverse_uniformmatrixlocation = glGetUniformLocation(shaderprogram, "inverse_model_to_world_matrix");
 		glUniformMatrix4fv(uniformmatrixlocation, 1, GL_FALSE, glm::value_ptr(rotationY));
+		glUniformMatrix4fv(inverse_uniformmatrixlocation, 1, GL_FALSE, glm::value_ptr(inverseY));
 		GLint uniformcolorlocation = glGetUniformLocation(shaderprogram, "user_color");
 		glUniform3f(uniformcolorlocation, 0.443f, 0.694f, 0.153f);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		glUniform3f(uniformcolorlocation, 0.0f, 0.0f, 1.0f);
 		glDrawArrays(GL_TRIANGLES, 3, 3);
-		glUniform3f(uniformcolorlocation, 0.0f, 1.0f, 0.0f);
+		glUniform3f(uniformcolorlocation, 0.0f, 0.0f, 1.0f);
 		glDrawArrays(GL_TRIANGLES, 6, 3);
-		glUniform3f(uniformcolorlocation, 1.0f, 0.0f, 0.0f);
+		glUniform3f(uniformcolorlocation, 0.0f, 0.0f, 1.0f);
 		glDrawArrays(GL_TRIANGLES, 9, 3);
+
 }
