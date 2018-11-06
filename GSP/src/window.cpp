@@ -149,8 +149,8 @@ void Window::drawTetraeder() {
 		-1 * sin(angle * M_PI / 180), 0, cos(angle * M_PI / 180), 0,
 		0, 0, 0, 1
 	};
-	const glm::mat4 rotationY = glm::make_mat4(values);
-	const glm::mat4 inverseY = glm::inverse(rotationY);
+	glm::mat4 rotationY = glm::make_mat4(values);
+	glm::mat4 inverseY = glm::inverseTranspose(rotationY);
 
 	const char* vertexsource = "#version 330 core\n"
 							   "uniform mat4 model_to_world_matrix;\n"

@@ -8,6 +8,7 @@
 #include <math.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <stdlib.h>
+#include <glm/gtc/matrix_inverse.hpp>
 
 class Window {
  public:
