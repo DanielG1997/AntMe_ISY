@@ -137,18 +137,27 @@ void Window::drawTetraeder() {
 	//printf("%f  %f  %f\n", n4.x, n4.y, n4.z);
 
 	//ground(n1), right(n2), left(n3), back(n4)
-	glm::vec3 data[] = { v1,n1,v2,n2,v3,n3,
-						 v2,n2,v3,n3,v4,n4,
-						 v1,n1,v3,n3,v4,n4,
-						 v1,n1,v2,n2,v4,n4 
+	glm::vec3 data[] = { v1,n1,v2,n1,v3,n1,
+						 v2,n2,v3,n2,v4,n2,
+						 v1,n3,v3,n3,v4,n3,
+						 v1,n4,v2,n4,v4,n4 
 					   };
+	int angle = 180;
+	float values[16] = {
+		cos(angle * M_PI/180), 0, sin(angle * M_PI / 180), 0,
+		0, 1, 0, 0,
+		-1 * sin(angle * M_PI / 180), 0, cos(angle * M_PI / 180), 0,
+		0, 0, 0, 1
+	};
+	const glm::mat4 rotationY = glm::make_mat4(values);
 
 	const char* vertexsource = "#version 330 core\n"
 							   "uniform mat4 model_to_world_matrix;\n"
 							   "layout(location = 0) in vec3 vertex_position;\n"
 							   "void main() {\n"
-							   "gl_Position.xyz = vertex_position;\n"
-							   "gl_Position.w = 1.0;\n"
+								"gl_Position = model_to_world_matrix * vec4((vertex_position), 1.0f);\n"
+							  /* "gl_Position.xyz = vertex_position;\n"
+							   "gl_Position.w = 1.0;\n"*/
 							   "}";
 
 	const char* fragmentsource = "#version 330 core\n"
@@ -217,9 +226,16 @@ void Window::drawTetraeder() {
 
 	this->setColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glUseProgram(shaderprogram);
+	glEnable(GL_DEPTH_TEST);
 	GLint uniformmatrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
-	//glUniformMatrix4fv(uniformmatrixlocation, 1, GL_FALSE, NULL);
-	GLint uniformcolorlocation = glGetUniformLocation(shaderprogram, "user_color");
-	glUniform3f(uniformcolorlocation, 0.443f, 0.694f, 0.153f);
-	glDrawArrays(GL_TRIANGLES, 0, 12);
+		glUniformMatrix4fv(uniformmatrixlocation, 1, GL_FALSE, glm::value_ptr(rotationY));
+		GLint uniformcolorlocation = glGetUniformLocation(shaderprogram, "user_color");
+		glUniform3f(uniformcolorlocation, 0.443f, 0.694f, 0.153f);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glUniform3f(uniformcolorlocation, 0.0f, 0.0f, 1.0f);
+		glDrawArrays(GL_TRIANGLES, 3, 3);
+		glUniform3f(uniformcolorlocation, 0.0f, 1.0f, 0.0f);
+		glDrawArrays(GL_TRIANGLES, 6, 3);
+		glUniform3f(uniformcolorlocation, 1.0f, 0.0f, 0.0f);
+		glDrawArrays(GL_TRIANGLES, 9, 3);
 }

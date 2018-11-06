@@ -2,9 +2,12 @@
 #define WINDOW_HPP_
 
 #include "SDL.h"
-#include <glew.h>
-#include <glm/glm.hpp>
 #include <Windows.h>
+#include <GLEW/glew.h>
+#include <glm/glm.hpp>
+#include <math.h>
+#include <glm/gtc/type_ptr.hpp>
+#include <stdlib.h>
 
 class Window {
  public:
