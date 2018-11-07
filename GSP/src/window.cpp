@@ -142,13 +142,13 @@ void Window::drawTetraeder() {
 						 v1,n3,v3,n3,v4,n3,
 						 v1,n4,v2,n4,v4,n4 
 					   };
-	int angle = 00;
+	int angle = 60;
 	float values[16] = {
-		cos(angle * M_PI/180), 0, sin(angle * M_PI / 180), 0,
-		0, 1, 0, 0,
-		-1 * sin(angle * M_PI / 180), 0, cos(angle * M_PI / 180), 0,
-		0, 0, 0, 1
-	};
+						cos(angle * M_PI/180), 0, sin(angle * M_PI / 180), 0,
+						0, 1, 0, 0,
+						-1 * sin(angle * M_PI / 180), 0, cos(angle * M_PI / 180), 0,
+						0, 0, 0, 1
+						};
 	glm::mat4 rotationY = glm::make_mat4(values);
 	glm::mat4 inverseY = glm::inverseTranspose(rotationY);
 
