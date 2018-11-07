@@ -2,25 +2,27 @@
 #define WINDOW_HPP_
 
 #include "SDL.h"
+#include "geometry.hpp"
+#include <glew.h>
 #include <Windows.h>
-#include <GLEW/glew.h>
-#include <glm/glm.hpp>
-#include <math.h>
-#include <glm/gtc/type_ptr.hpp>
-#include <stdlib.h>
-#include <glm/gtc/matrix_inverse.hpp>
 
 class Window {
  public:
   Window(unsigned int width, unsigned int height);
 
   void setColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
+  void clear();
   void swap();
+
   void drawTriangles();
-  void drawTetraeder();
+  void drawTetrahedron();
+
+  GLuint createProgramWithShaders(const char* vertexsource, const char* fragmentsource);
+  void createVertexAndBufferObjects();
 
  private:
   SDL_Window* window_ = nullptr;
+  Geometry geometry_;
 };
 
 #endif  // WINDOW_HPP_

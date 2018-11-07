@@ -15,6 +15,8 @@ add_executable(GSP
   src/application.cpp
   src/application.hpp
   src/main.cpp
+  src/geometry.hpp
+  src/geometry.cpp
   src/window.cpp
   src/window.hpp
   )
