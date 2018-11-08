@@ -15,6 +15,8 @@ Window::Window(unsigned int width, unsigned int height) : geometry_() {
 
   glewExperimental = GL_TRUE;
   glewInit();
+
+  this->createVertexAndBufferObjects();
 }
 
 void Window::setColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha) {
@@ -106,7 +108,7 @@ void Window::drawTriangles() {
 						         "}";
 
 	GLuint shaderprogram = this->createProgramWithShaders(vertexsource, fragmentsource);
-	this->createVertexAndBufferObjects();
+	//this->createVertexAndBufferObjects();
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(data), &data, GL_STATIC_DRAW);
 
@@ -170,7 +172,7 @@ void Window::drawTetrahedron() {
 								 "}";
 
 	GLuint shaderprogram = this->createProgramWithShaders(vertexsource, fragmentsource);
-	this->createVertexAndBufferObjects();
+	//this->createVertexAndBufferObjects();
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(data), &data, GL_STATIC_DRAW);
 
