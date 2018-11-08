@@ -47,6 +47,7 @@ int Application::Run() {
 				window_.drawTetrahedron();
 				break;
 			}
+			Sleep(100);
 			window_.swap();
 		}
     }

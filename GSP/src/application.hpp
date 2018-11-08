@@ -2,6 +2,7 @@
 #define APPLICATION_HPP_
 
 #include "window.hpp"
+#include <Winbase.h>
 
 class Application {
  public:

@@ -147,7 +147,7 @@ void Window::drawTetrahedron() {
 						 v1,n4,v2,n4,v4,n4 
 					   };
 
-	glm::mat4x4 rotationY = geometry_.getRotationMatrix('y');
+	glm::mat4x4 rotationY = geometry_.getRotationMatrix('y', 120.0f);
 	glm::mat4x4 inverseY = glm::inverse(rotationY);
 
 	const char* vertexsource =  "#version 330 core\n"
