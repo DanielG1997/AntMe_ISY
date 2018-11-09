@@ -1,6 +1,6 @@
 #include "window.hpp"
 
-Window::Window(unsigned int width, unsigned int height) : geometry_() {
+Window::Window(unsigned int width, unsigned int height) {
   SDL_Init(SDL_INIT_VIDEO);
 
   window_ =
@@ -53,7 +53,7 @@ GLuint Window::createProgramWithShaders(const char* vertexsource, const char* fr
 	if (!success)
 	{
 		glGetShaderInfoLog(fragmentshader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
 
 	GLuint shaderprogram = glCreateProgram();
@@ -108,7 +108,6 @@ void Window::drawTriangles() {
 						         "}";
 
 	GLuint shaderprogram = this->createProgramWithShaders(vertexsource, fragmentsource);
-	//this->createVertexAndBufferObjects();
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(data), &data, GL_STATIC_DRAW);
 
@@ -147,22 +146,20 @@ void Window::drawTetrahedron() {
 						 v1,n4,v2,n4,v4,n4 
 					   };
 
-	glm::mat4x4 rotationY = geometry_.getRotationMatrix('y', 120.0f);
-	glm::mat4x4 inverseY = glm::inverse(rotationY);
+	glm::mat4x4 rotationY = this->getRotationMatrix('y', 0.0f);
 
 	const char* vertexsource =  "#version 330 core\n"
 							    "uniform mat4 model_to_world_matrix;\n"
-								"uniform mat4 inverse_model_to_world_matrix;\n"
 								"layout(location = 0) in vec3 vertex_position;\n"
 								"layout(location = 1) in vec3 normal_position;\n"
-								"out vec4 vertex_normal_worldspace;\n"
+								"out vec3 vertex_normal_worldspace;\n"
 								"void main() {\n"
 								"gl_Position = model_to_world_matrix * vec4((vertex_position), 1.0f);\n"
-								"vertex_normal_worldspace = inverse_model_to_world_matrix * vec4((normal_position), 1.0f);\n"
+								"vertex_normal_worldspace = (inverse(transpose(model_to_world_matrix)) * vec4((normal_position), 1.0f)).xyz;\n"
 								"}";
 
 	const char* fragmentsource = "#version 330 core\n"
-								 "in vec4 vertex_normal_worldspace;\n"
+								 "in vec3 vertex_normal_worldspace;\n"
 								 "uniform vec3 user_color;\n"
 								 "layout(location = 0) out vec3 color;\n"
 								 "void main() {\n"
@@ -172,7 +169,6 @@ void Window::drawTetrahedron() {
 								 "}";
 
 	GLuint shaderprogram = this->createProgramWithShaders(vertexsource, fragmentsource);
-	//this->createVertexAndBufferObjects();
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(data), &data, GL_STATIC_DRAW);
 
@@ -187,9 +183,7 @@ void Window::drawTetrahedron() {
 
 	glEnable(GL_DEPTH_TEST);
 	GLint uniformmatrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
-	glUniformMatrix4fv(uniformmatrixlocation, 1, GL_FALSE, glm::value_ptr(rotationY));
-	GLint inverseuniformmatrixlocation = glGetUniformLocation(shaderprogram, "inverse_model_to_world_matrix");
-	glUniformMatrix4fv(inverseuniformmatrixlocation, 1, GL_TRUE, glm::value_ptr(inverseY));
+	glUniformMatrix4fv(uniformmatrixlocation, 1, GL_TRUE, glm::value_ptr(rotationY));
 	GLint uniformcolorlocation = glGetUniformLocation(shaderprogram, "user_color");
 	glUniform3f(uniformcolorlocation, 0.443f, 0.694f, 0.153f);
 	glDrawArrays(GL_TRIANGLES, 0, 3);

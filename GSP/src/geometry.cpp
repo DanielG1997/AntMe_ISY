@@ -1,3 +1,4 @@
+#define _USE_MATH_DEFINES
 #include "geometry.hpp"
 
 glm::mat4x4 Geometry::getRotationMatrix(char axis, float angle) {

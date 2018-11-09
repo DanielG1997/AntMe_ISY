@@ -1,6 +1,5 @@
 #ifndef GEOMETRY_HPP_
 #define GEOMETRY_HPP_
-#define _USE_MATH_DEFINES
 
 #include <glm/glm.hpp>
 #include <iostream>
@@ -11,8 +10,6 @@
 
 class Geometry{
  public:
-	 Geometry() {};
-
 	 glm::mat4x4 getRotationMatrix(char axis, float angle = 30.0f);
 	 glm::mat4x4 getTranslationMatrix(glm::vec3 trans);
 	 glm::mat4x4 getScaleMatrix(glm::vec3 scale);

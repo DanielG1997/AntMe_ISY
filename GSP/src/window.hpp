@@ -6,7 +6,7 @@
 #include <glew.h>
 #include <Windows.h>
 
-class Window {
+class Window : public Geometry{
  public:
   Window(unsigned int width, unsigned int height);
 
@@ -22,7 +22,6 @@ class Window {
 
  private:
   SDL_Window* window_ = nullptr;
-  Geometry geometry_;
 };
 
 #endif  // WINDOW_HPP_
