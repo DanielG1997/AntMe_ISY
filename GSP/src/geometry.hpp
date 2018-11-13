@@ -4,7 +4,6 @@
 #include <glm/glm.hpp>
 #include <iostream>
 #include <stdlib.h>
-#include <math.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 

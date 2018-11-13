@@ -160,7 +160,8 @@ void Window::drawTetrahedron(int count) {
 	glm::mat4x4 rotationX = this->getRotationMatrix('x', count);
 	glm::mat4x4 rotationY = this->getRotationMatrix('y', count);
 	glm::mat4x4 rotationZ = this->getRotationMatrix('z', count);
-	glm::mat4x4 operations = rotationX * rotationY * rotationZ;
+
+	glm::mat4x4 operations = rotationY;
 
 	const char* vertexsource =  "#version 330 core\n"
 							    "uniform mat4 model_to_world_matrix;\n"

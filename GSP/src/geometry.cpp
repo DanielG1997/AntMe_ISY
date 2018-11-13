@@ -1,25 +1,24 @@
-#define _USE_MATH_DEFINES
 #include "geometry.hpp"
 
 glm::mat4x4 Geometry::getRotationMatrix(char axis, float angle) {
 	glm::mat4x4 matrix;
 	if (axis == 'x' || axis == 'X') {
 		matrix = glm::mat4x4 (glm::vec4(1, 0, 0, 0),
-							  glm::vec4(0, cos(angle * M_PI / 180), -1* sin(angle * M_PI / 180), 0),
-							  glm::vec4(0, sin(angle * M_PI / 180), cos(angle * M_PI / 180), 0),
+							  glm::vec4(0, cos(angle * glm::pi<float>() / 180), -1* sin(angle * glm::pi<float>() / 180), 0),
+							  glm::vec4(0, sin(angle * glm::pi<float>() / 180), cos(angle * glm::pi<float>() / 180), 0),
 							  glm::vec4(0, 0, 0, 1)
 							 );
 	}
 	else if (axis == 'y' || axis == 'Y') {
-		matrix = glm::mat4x4(glm::vec4(cos(angle * M_PI / 180), 0, sin(angle * M_PI / 180), 0),
+		matrix = glm::mat4x4(glm::vec4(cos(angle * glm::pi<float>() / 180), 0, sin(angle * glm::pi<float>() / 180), 0),
 						     glm::vec4(0, 1, 0, 0),
-						 	 glm::vec4(-1 * sin(angle * M_PI / 180), 0, cos(angle * M_PI / 180), 0),
+						 	 glm::vec4(-1 * sin(angle * glm::pi<float>() / 180), 0, cos(angle * glm::pi<float>() / 180), 0),
 							 glm::vec4(0, 0, 0, 1)
 							);
 	}
 	else if (axis == 'z' || axis == 'Z') {
-		matrix = glm::mat4x4(glm::vec4(cos(angle * M_PI / 180), -1 * sin(angle * M_PI / 180), 0, 0),
-							 glm::vec4(sin(angle * M_PI / 180), cos(angle * M_PI / 180), 0, 0),
+		matrix = glm::mat4x4(glm::vec4(cos(angle * glm::pi<float>() / 180), -1 * sin(angle * glm::pi<float>() / 180), 0, 0),
+							 glm::vec4(sin(angle * glm::pi<float>() / 180), cos(angle * glm::pi<float>() / 180), 0, 0),
 							 glm::vec4(0, 0, 1, 0),
 							 glm::vec4(0, 0, 0, 1)
 							);
