@@ -62,9 +62,9 @@ int Application::Run() {
 			window_.setColor(1, 1, 1, 1);
 			window_.clear();
 			window_.drawTetrahedron(count);
-			count = (count + 10) % 360;
+			count = (count + 5) % 360;
 		}
-		Sleep(100);
+		Sleep(50);
 		window_.swap();
     }
   }
