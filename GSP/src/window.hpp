@@ -18,10 +18,16 @@ class Window : public Geometry{
   void drawTetrahedron();
 
   GLuint createProgramWithShaders(const char* vertexsource, const char* fragmentsource);
-  void createVertexAndBufferObjects();
+  void deleteShaderObjects();
 
  private:
   SDL_Window* window_ = nullptr;
+
+  GLuint vertexobject;
+  GLuint bufferobject;
+  GLuint vertexshader;
+  GLuint fragmentshader;
+  GLuint shaderprogram;
 };
 
 #endif  // WINDOW_HPP_

@@ -16,7 +16,12 @@ Window::Window(unsigned int width, unsigned int height) {
   glewExperimental = GL_TRUE;
   glewInit();
 
-  this->createVertexAndBufferObjects();
+  //create VBO and VAO
+  glGenVertexArrays(1, &vertexobject);
+  glGenBuffers(1, &bufferobject);
+
+  glBindVertexArray(vertexobject);
+  glBindBuffer(GL_ARRAY_BUFFER, bufferobject);
 }
 
 void Window::setColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha) {
@@ -35,7 +40,7 @@ GLuint Window::createProgramWithShaders(const char* vertexsource, const char* fr
 	int success;
 	char infoLog[512];
 
-	GLuint vertexshader = glCreateShader(GL_VERTEX_SHADER);
+	vertexshader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexshader, 1, &vertexsource, nullptr);
 	glCompileShader(vertexshader);
 
@@ -45,7 +50,7 @@ GLuint Window::createProgramWithShaders(const char* vertexsource, const char* fr
 		glGetShaderInfoLog(vertexshader, 512, NULL, infoLog);
 		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
-	GLuint fragmentshader = glCreateShader(GL_FRAGMENT_SHADER);
+	fragmentshader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentshader, 1, &fragmentsource, nullptr);
 	glCompileShader(fragmentshader);
 
@@ -56,7 +61,7 @@ GLuint Window::createProgramWithShaders(const char* vertexsource, const char* fr
 		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
 
-	GLuint shaderprogram = glCreateProgram();
+	shaderprogram = glCreateProgram();
 	glAttachShader(shaderprogram, vertexshader);
 	glAttachShader(shaderprogram, fragmentshader);
 	glLinkProgram(shaderprogram);
@@ -67,18 +72,15 @@ GLuint Window::createProgramWithShaders(const char* vertexsource, const char* fr
 		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
 	}
 
+	glUseProgram(shaderprogram);
+
 	return shaderprogram;
 }
 
-void Window::createVertexAndBufferObjects() {
-	GLuint vertexobject;
-	glGenVertexArrays(1, &vertexobject);
-
-	GLuint bufferobject;
-	glGenBuffers(1, &bufferobject);
-
-	glBindVertexArray(vertexobject);
-	glBindBuffer(GL_ARRAY_BUFFER, bufferobject);
+void Window::deleteShaderObjects() {
+	glDeleteShader(vertexshader);
+	glDeleteShader(fragmentshader);
+	glDeleteProgram(shaderprogram);
 }
 
 void Window::drawTriangles() {
@@ -115,38 +117,48 @@ void Window::drawTriangles() {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
 	//now its time to draw, first triangle green, second purple
-	glUseProgram(shaderprogram);
 	GLint uniformlocation = glGetUniformLocation(shaderprogram, "mycolor");
 	glUniform3f(uniformlocation, 0.443f, 0.694f, 0.153f);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 	glUniform3f(uniformlocation, 0.567f, 0.306f, 0.847f);
 	glDrawArrays(GL_TRIANGLES, 3, 3);
+
+	this->deleteShaderObjects();
 }
 
 void Window::drawTetrahedron() {
-	glm::vec3 v1 = glm::vec3(-0.6, -0.6, 0.39);
-	glm::vec3 v2 = glm::vec3(0.6, -0.6, 0.39);
-	glm::vec3 v3 = glm::vec3(0.0, -0.6, -0.78);
-	glm::vec3 v4 = glm::vec3(0.0, 0.6, 0.0);
+	glm::vec3 v0 = glm::vec3(-0.6, -0.6, 0.39);
+	glm::vec3 v1 = glm::vec3(0.6, -0.6, 0.39);
+	glm::vec3 v2 = glm::vec3(0.0, -0.6, -0.78);
+	glm::vec3 v3 = glm::vec3(0.0, 0.6, 0.0);
 
 	//normal vertices should be normalized and are pointing away from the triangleside
-	glm::vec3 n1 = glm::cross((v3 - v1), (v2 - v1));
+	glm::vec3 n0 = glm::cross((v2 - v0), (v1 - v0));
+	n0 = n0 / glm::length(n0);
+	glm::vec3 n1 = glm::cross((v2 - v1), (v3 - v1));
 	n1 = n1 / glm::length(n1);
-	glm::vec3 n2 = glm::cross((v3 - v2), (v4 - v2));
+	glm::vec3 n2 = glm::cross((v0 - v2), (v3 - v2));
 	n2 = n2 / glm::length(n2);
-	glm::vec3 n3 = glm::cross((v1 - v3), (v4 - v3));
+	glm::vec3 n3 = glm::cross((v0 - v3), (v1 - v3));
 	n3 = n3 / glm::length(n3);
-	glm::vec3 n4 = glm::cross((v1 - v4), (v2 - v4));
-	n4 = n4 / glm::length(n4);
 
-	//ground(n1), right(n2), left(n3), back(n4)
-	glm::vec3 data[] = { v1,n1,v2,n1,v3,n1,
-						 v2,n2,v3,n2,v4,n2,
-						 v1,n3,v3,n3,v4,n3,
-						 v1,n4,v2,n4,v4,n4 
-					   };
+	//printf("%f %f %f\n", n0.x, n0.y, n0.z);
+	//printf("%f %f %f\n", n1.x, n1.y, n1.z);
+	//printf("%f %f %f\n", n2.x, n2.y, n2.z);
+	//printf("%f %f %f\n", n3.x, n3.y, n3.z);
 
+	//ground(n0), right(n1), left(n2), back(n3)
+	glm::vec3 data[] = { v0,n0,v1,n0,v2,n0,
+						 v1,n1,v2,n1,v3,n1,
+						 v0,n2,v2,n2,v3,n2,
+						 v0,n3,v1,n3,v3,n3
+	};
+
+	//operations todo
+	glm::mat4x4 rotationX = this->getRotationMatrix('x', 180.0f);
 	glm::mat4x4 rotationY = this->getRotationMatrix('y', 0.0f);
+	glm::mat4x4 rotationZ = this->getRotationMatrix('z', 180.0f);
+	glm::mat4x4 operations[] = {rotationX, rotationY, rotationZ};
 
 	const char* vertexsource =  "#version 330 core\n"
 							    "uniform mat4 model_to_world_matrix;\n"
@@ -155,7 +167,7 @@ void Window::drawTetrahedron() {
 								"out vec3 vertex_normal_worldspace;\n"
 								"void main() {\n"
 								"gl_Position = model_to_world_matrix * vec4((vertex_position), 1.0f);\n"
-								"vertex_normal_worldspace = (inverse(transpose(model_to_world_matrix)) * vec4((normal_position), 1.0f)).xyz;\n"
+								"vertex_normal_worldspace = (transpose(inverse(model_to_world_matrix)) * vec4(normal_position, 1.0f)).xyz;\n"
 								"}";
 
 	const char* fragmentsource = "#version 330 core\n"
@@ -163,23 +175,21 @@ void Window::drawTetrahedron() {
 								 "uniform vec3 user_color;\n"
 								 "layout(location = 0) out vec3 color;\n"
 								 "void main() {\n"
-								 "float nz = vertex_normal_worldspace.z\n;"
+								 "float nz = vertex_normal_worldspace.z;\n"
 								 "float factor = 0.5 + 0.5 * abs(nz);\n"
-								 "color = factor * user_color;\n"
+								 "color = factor * (user_color).xyz;\n"
 								 "}";
 
 	GLuint shaderprogram = this->createProgramWithShaders(vertexsource, fragmentsource);
 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(data), &data, GL_STATIC_DRAW);
-
 	GLint size = sizeof(glm::vec3);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(data), &data, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 2*size, nullptr);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 2*size, &size);
-
-	glUseProgram(shaderprogram);
 
 	glEnable(GL_DEPTH_TEST);
 	GLint uniformmatrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
@@ -193,4 +203,6 @@ void Window::drawTetrahedron() {
 	glDrawArrays(GL_TRIANGLES, 6, 3);
 	glUniform3f(uniformcolorlocation, 0.0f, 0.0f, 1.0f);
 	glDrawArrays(GL_TRIANGLES, 9, 3);
+
+	this->deleteShaderObjects();
 }
