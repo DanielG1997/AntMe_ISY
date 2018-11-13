@@ -123,7 +123,7 @@ void Window::drawTriangles() {
 	glDrawArrays(GL_TRIANGLES, 3, 3);
 }
 
-void Window::drawTetrahedron() {
+void Window::drawTetrahedron(int count) {
 	glm::vec3 v1 = glm::vec3(-0.6, -0.6, 0.39);
 	glm::vec3 v2 = glm::vec3(0.6, -0.6, 0.39);
 	glm::vec3 v3 = glm::vec3(0.0, -0.6, -0.78);
@@ -146,7 +146,7 @@ void Window::drawTetrahedron() {
 						 v1,n4,v2,n4,v4,n4 
 					   };
 
-	glm::mat4x4 rotationY = this->getRotationMatrix('y', 0.0f);
+	glm::mat4x4 rotationY = this->getRotationMatrix('y', count);
 
 	const char* vertexsource =  "#version 330 core\n"
 							    "uniform mat4 model_to_world_matrix;\n"
@@ -155,7 +155,7 @@ void Window::drawTetrahedron() {
 								"out vec3 vertex_normal_worldspace;\n"
 								"void main() {\n"
 								"gl_Position = model_to_world_matrix * vec4((vertex_position), 1.0f);\n"
-								"vertex_normal_worldspace = (inverse(transpose(model_to_world_matrix)) * vec4((normal_position), 1.0f)).xyz;\n"
+								"vertex_normal_worldspace = (transpose(inverse(model_to_world_matrix)) * vec4((normal_position), 0.0)).xyz;\n"
 								"}";
 
 	const char* fragmentsource = "#version 330 core\n"
@@ -163,7 +163,7 @@ void Window::drawTetrahedron() {
 								 "uniform vec3 user_color;\n"
 								 "layout(location = 0) out vec3 color;\n"
 								 "void main() {\n"
-								 "float nz = vertex_normal_worldspace.z\n;"
+								 "float nz = vertex_normal_worldspace.z;\n"
 								 "float factor = 0.5 + 0.5 * abs(nz);\n"
 								 "color = factor * user_color;\n"
 								 "}";

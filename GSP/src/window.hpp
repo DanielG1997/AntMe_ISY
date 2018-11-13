@@ -3,7 +3,7 @@
 
 #include "SDL.h"
 #include "geometry.hpp"
-#include <glew.h>
+#include <GLEW/glew.h>
 #include <Windows.h>
 
 class Window : public Geometry{
@@ -15,7 +15,7 @@ class Window : public Geometry{
   void swap();
 
   void drawTriangles();
-  void drawTetrahedron();
+  void drawTetrahedron(int count);
 
   GLuint createProgramWithShaders(const char* vertexsource, const char* fragmentsource);
   void createVertexAndBufferObjects();
