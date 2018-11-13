@@ -157,10 +157,10 @@ void Window::drawTetrahedron(int count) {
 
 
 	//operations todo
-	glm::mat4x4 rotationX = this->getRotationMatrix('x', 180.0f);
+	glm::mat4x4 rotationX = this->getRotationMatrix('x', count);
 	glm::mat4x4 rotationY = this->getRotationMatrix('y', count);
-	glm::mat4x4 rotationZ = this->getRotationMatrix('z', 180.0f);
-	glm::mat4x4 operations[] = {rotationX, rotationY, rotationZ};
+	glm::mat4x4 rotationZ = this->getRotationMatrix('z', count);
+	glm::mat4x4 operations = rotationX * rotationY * rotationZ;
 
 	const char* vertexsource =  "#version 330 core\n"
 							    "uniform mat4 model_to_world_matrix;\n"
@@ -179,7 +179,7 @@ void Window::drawTetrahedron(int count) {
 								 "void main() {\n"
 								 "float nz = vertex_normal_worldspace.z;\n"
 								 "float factor = 0.5 + 0.5 * abs(nz);\n"
-								 "color = factor * (user_color).xyz;\n"
+								 "color = factor * user_color;\n"
 								 "}";
 
 	GLuint shaderprogram = this->createProgramWithShaders(vertexsource, fragmentsource);
@@ -195,7 +195,7 @@ void Window::drawTetrahedron(int count) {
 
 	glEnable(GL_DEPTH_TEST);
 	GLint uniformmatrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
-	glUniformMatrix4fv(uniformmatrixlocation, 1, GL_TRUE, glm::value_ptr(rotationY));
+	glUniformMatrix4fv(uniformmatrixlocation, 1, GL_TRUE, glm::value_ptr(operations));
 	GLint uniformcolorlocation = glGetUniformLocation(shaderprogram, "user_color");
 	glUniform3f(uniformcolorlocation, 0.443f, 0.694f, 0.153f);
 	glDrawArrays(GL_TRIANGLES, 0, 3);

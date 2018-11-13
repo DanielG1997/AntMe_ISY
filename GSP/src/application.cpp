@@ -58,15 +58,18 @@ int Application::Run() {
 				break;
 			}
 		}
-		if (flag) {
-			window_.setColor(1, 1, 1, 1);
-			window_.clear();
-			window_.drawTetrahedron(count);
-			count = (count + 5) % 360;
+		if (!flag) {
+			window_.swap();
 		}
-		Sleep(50);
-		window_.swap();
+		Sleep(100);
     }
+	if (flag) {
+		window_.setColor(1, 1, 1, 1);
+		window_.clear();
+		window_.drawTetrahedron(count);
+		count = (count + 1) % 360;
+		window_.swap();
+	}
   }
   return EXIT_SUCCESS;
 }
