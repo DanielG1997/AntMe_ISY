@@ -7,7 +7,7 @@ int Application::Run() {
   SDL_Event event;
   bool runs = true;
   bool flag = false;
-  int count = 0;
+  float degrees = 0.0;
   while (runs) {
     while (SDL_PollEvent(&event)) {
 		if (event.type == SDL_QUIT) {
@@ -50,10 +50,6 @@ int Application::Run() {
 				break;
 			//Tetraeder zeichnen
 			case SDL_SCANCODE_T:
-				/*window_.setColor(1, 1, 1, 1);
-				window_.clear();
-				window_.drawTetrahedron(count);
-				count = (count + 10) % 360;*/
 				flag = true;
 				break;
 			}
@@ -66,8 +62,10 @@ int Application::Run() {
 	if (flag) {
 		window_.setColor(1, 1, 1, 1);
 		window_.clear();
-		window_.drawTetrahedron(count);
-		count = (count + 1) % 360;
+		window_.drawTetrahedron(degrees);
+		degrees = (degrees + 1);
+		if (degrees == 360)
+			degrees = 0;
 		window_.swap();
 	}
   }

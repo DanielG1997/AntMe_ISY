@@ -127,7 +127,7 @@ void Window::drawTriangles() {
 }
 
 
-void Window::drawTetrahedron(int count) {
+void Window::drawTetrahedron(float degrees) {
 	glm::vec3 v0 = glm::vec3(-0.6, -0.6, 0.39);
 	glm::vec3 v1 = glm::vec3(0.6, -0.6, 0.39);
 	glm::vec3 v2 = glm::vec3(0.0, -0.6, -0.78);
@@ -157,9 +157,9 @@ void Window::drawTetrahedron(int count) {
 
 
 	//operations todo
-	glm::mat4x4 rotationX = this->getRotationMatrix('x', count);
-	glm::mat4x4 rotationY = this->getRotationMatrix('y', count);
-	glm::mat4x4 rotationZ = this->getRotationMatrix('z', count);
+	glm::mat4x4 rotationX = this->getRotationMatrix('x', degrees);
+	glm::mat4x4 rotationY = this->getRotationMatrix('y', degrees);
+	glm::mat4x4 rotationZ = this->getRotationMatrix('z', degrees);
 
 	glm::mat4x4 operations = rotationY;
 

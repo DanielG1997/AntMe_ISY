@@ -15,7 +15,7 @@ class Window : public Geometry{
   void swap();
 
   void drawTriangles();
-  void drawTetrahedron(int count);
+  void drawTetrahedron(float degrees);
 
   GLuint createProgramWithShaders(const char* vertexsource, const char* fragmentsource);
   void deleteShaderObjects();
