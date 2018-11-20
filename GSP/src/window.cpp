@@ -157,13 +157,13 @@ void Window::drawTetrahedron(float degrees) {
 
 
 	//operations todo
-	glm::mat4x4 projection = this->getProjectionMatrix(1, -1, -1, -1, 1, -1);
+	glm::mat4x4 projection = this->getProjectionMatrix(1, -1, 1, -1, 1, -1);
 
 	glm::mat4x4 rotationX = this->getRotationMatrix('x', degrees);
 	glm::mat4x4 rotationY = this->getRotationMatrix('y', degrees);
 	glm::mat4x4 rotationZ = this->getRotationMatrix('z', degrees);
 
-	glm::mat4x4 operations = rotationY;
+	glm::mat4x4 operations = projection * rotationY;
 
 	const char* vertexsource =  "#version 330 core\n"
 							    "uniform mat4 model_to_world_matrix;\n"
