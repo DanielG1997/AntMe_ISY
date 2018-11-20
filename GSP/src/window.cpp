@@ -192,7 +192,7 @@ void Window::drawTetrahedron(float degrees) {
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 2*size, nullptr);
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 2*size, &size);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 2*size, (void*)size);
 
 	glEnable(GL_DEPTH_TEST);
 	GLint uniformmatrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
