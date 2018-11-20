@@ -13,6 +13,7 @@ class Geometry{
 	 glm::mat4x4 getTranslationMatrix(glm::vec3 trans);
 	 glm::mat4x4 getScaleMatrix(glm::vec3 scale);
 	 glm::mat4x4 getShearMatrix(char axis, glm::vec3 shear);
+	 glm::mat4x4 getProjectionMatrix(float r, float l, float t, float b, float f, float n);
 };
 
 #endif  // GEOMETRY_HPP_

@@ -71,3 +71,13 @@ glm::mat4x4 Geometry::getShearMatrix(char axis, glm::vec3 shear) {
 	}
 	return matrix;
 }
+
+glm::mat4x4 Geometry::getProjectionMatrix(float r, float l, float t, float b, float f, float n) {
+	glm::mat4x4 matrix;
+	matrix = glm::mat4x4(glm::vec4(2 * n / (r - l), 0, 0, 0),
+						 glm::vec4(0, 2 * n / (t - b), 0, 0),
+						 glm::vec4((r + l) / (r - l), (t + b) / (t - b), -1 * (f + n) / (f - n), -1),
+		 				 glm::vec4(0, 0, -2 * n * f / (f - n), 0)
+						);
+	return matrix;
+}
