@@ -160,13 +160,13 @@ void Window::drawTetrahedron(float degrees) {
 	//glm::mat4x4 view = glm::translate(view, glm::vec3(0.0f, 0.0f, -0.3f));
 	glm::mat4x4 view = this->getTranslationMatrix(glm::vec3(0.0f, 0.0f, 0.5f));
 	//glm::mat4x4 projection = glm::perspective(glm::radians(45.0f), (float) 960 / (float) 600, 0.1f, 100.0f);
-	glm::mat4x4 projection = this->getProjectionMatrix(1, -1, 1, -1, 1, -1);
+	glm::mat4x4 projection = glm::inverse(this->getPerspectiveMatrix(1, -1, 1, -1, 1, -1));
 
 	glm::mat4x4 rotationX = this->getRotationMatrix('x', degrees);
 	glm::mat4x4 rotationY = this->getRotationMatrix('y', degrees);
 	glm::mat4x4 rotationZ = this->getRotationMatrix('z', degrees);
 
-	glm::mat4x4 operations = projection;
+	glm::mat4x4 operations = rotationY;
 
 	const char* vertexsource =  "#version 330 core\n"
 							    "uniform mat4 model_to_world_matrix;\n"
@@ -203,11 +203,11 @@ void Window::drawTetrahedron(float degrees) {
 	GLint uniformmatrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
 	glUniformMatrix4fv(uniformmatrixlocation, 1, GL_TRUE, glm::value_ptr(operations));
 	GLint uniformcolorlocation = glGetUniformLocation(shaderprogram, "user_color");
-	glUniform3f(uniformcolorlocation, 0.443f, 0.694f, 0.153f);
+	glUniform3f(uniformcolorlocation, 0.0f, 1.0f, 0.0f);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 	glUniform3f(uniformcolorlocation, 1.0f, 0.0f, 0.0f);
 	glDrawArrays(GL_TRIANGLES, 3, 3);
-	glUniform3f(uniformcolorlocation, 0.0f, 1.0f, 0.0f);
+	glUniform3f(uniformcolorlocation, 1.0f, 1.0f, 0.0f);
 	glDrawArrays(GL_TRIANGLES, 6, 3);
 	glUniform3f(uniformcolorlocation, 0.0f, 0.0f, 1.0f);
 	glDrawArrays(GL_TRIANGLES, 9, 3);

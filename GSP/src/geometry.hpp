@@ -14,7 +14,9 @@ class Geometry{
 	 glm::mat4x4 getTranslationMatrix(glm::vec3 trans);
 	 glm::mat4x4 getScaleMatrix(glm::vec3 scale);
 	 glm::mat4x4 getShearMatrix(char axis, glm::vec3 shear);
-	 glm::mat4x4 getProjectionMatrix(float r, float l, float t, float b, float f, float n);
+	 glm::mat4x4 getPerspectiveMatrix(float r, float l, float t, float b, float f, float n);
+	 glm::mat4x4 getCameraMatrix(float r, float l, float t, float b, float f, float n);
+	 glm::mat4x4 getViewMatrix(float x, float y);
 };
 
 #endif  // GEOMETRY_HPP_

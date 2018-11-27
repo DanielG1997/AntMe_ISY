@@ -72,12 +72,26 @@ glm::mat4x4 Geometry::getShearMatrix(char axis, glm::vec3 shear) {
 	return matrix;
 }
 
-glm::mat4x4 Geometry::getProjectionMatrix(float r, float l, float t, float b, float f, float n) {
+glm::mat4x4 Geometry::getPerspectiveMatrix(float r, float l, float t, float b, float f, float n) {
 	glm::mat4x4 matrix;
 	matrix = glm::mat4x4(glm::vec4(2 * n / (r - l), 0, (r + l) / (r - l), 0),
 						 glm::vec4(0, 2 * n / (t - b), (t + b) / (t - b), 0),
 						 glm::vec4(0, 0, -1 * (f + n) / (f - n), -2 * n * f / (f - n)),
 		 				 glm::vec4(0, 0, -1, 0)
 						);
+	return matrix;
+}
+
+glm::mat4x4 Geometry::getCameraMatrix(float r, float l, float t, float b, float f, float n) {
+
+}
+
+glm::mat4x4 Geometry::getViewMatrix(float x, float y) {
+	glm::mat4x4 matrix;
+	matrix = glm::mat4x4(glm::vec4(x / 2, 0, 0, (x - 1) / 2),
+						 glm::vec4(0, y / 2, 0, (y -1) / 2),
+						 glm::vec4(0, 0, 1, 0),
+						 glm::vec4(0, 0, 0, 1)
+	);
 	return matrix;
 }
