@@ -158,9 +158,18 @@ void Window::drawTetrahedron(float degrees) {
 
 	//operations todo
 	//glm::mat4x4 view = glm::translate(view, glm::vec3(0.0f, 0.0f, -0.3f));
-	glm::mat4x4 view = this->getTranslationMatrix(glm::vec3(0.0f, 0.0f, 0.5f));
 	//glm::mat4x4 projection = glm::perspective(glm::radians(45.0f), (float) 960 / (float) 600, 0.1f, 100.0f);
-	glm::mat4x4 projection = glm::inverse(this->getPerspectiveMatrix(1, -1, 1, -1, 1, -1));
+	glm::vec3 u = glm::vec3(1, 0, 0);
+	glm::vec3 w = glm::vec3(0, 1, 0);
+	glm::vec3 v = glm::vec3(0, 0, 1);
+	glm::vec3 e = glm::vec3(0, 0, 0);
+
+	float x = 600.0;
+	float y = 960.0;
+
+	glm::mat4x4 perspective = this->getPerspectiveMatrix(1, -1, 1, -1, 1, -1);
+	glm::mat4x4 camera = this->getCameraMatrix(u, v, w, e);
+	glm::mat4x4 view = this->getViewMatrix(x, y);
 
 	glm::mat4x4 rotationX = this->getRotationMatrix('x', degrees);
 	glm::mat4x4 rotationY = this->getRotationMatrix('y', degrees);
