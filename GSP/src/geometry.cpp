@@ -82,8 +82,14 @@ glm::mat4x4 Geometry::getPerspectiveMatrix(float r, float l, float t, float b, f
 	return matrix;
 }
 
-glm::mat4x4 Geometry::getCameraMatrix(float r, float l, float t, float b, float f, float n) {
-
+glm::mat4x4 Geometry::getCoordinateMatrix(glm::vec3 u, glm::vec3 v, glm::vec3 w, glm::vec3 e) {
+	glm::mat4x4 matrix;
+	matrix = glm::mat4x4(glm::vec4(u.x, v.x, w.x, e.x),
+						 glm::vec4(u.y, v.y, w.y, e.y),
+						 glm::vec4(u.z, v.z, w.z, e.z),
+						 glm::vec4(0, 0, 0, 1)
+	);
+	return matrix;
 }
 
 glm::mat4x4 Geometry::getViewMatrix(float x, float y) {
