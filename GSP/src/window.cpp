@@ -164,6 +164,7 @@ void Window::drawTetrahedron(float degrees) {
 	glm::vec3 v = glm::vec3(0, 0, 1);
 	glm::vec3 e = glm::vec3(0, 0, 0);
 
+	//width and height of window
 	float x = 600.0;
 	float y = 960.0;
 
@@ -190,10 +191,13 @@ void Window::drawTetrahedron(float degrees) {
 	const char* fragmentsource = "#version 330 core\n"
 								 "in vec3 vertex_normal_worldspace;\n"
 								 "uniform vec3 user_color;\n"
+								 //"uniform vec3 ka, kd, ks, ca, ci, l, h;\n"
+								 //"uniform int phong;\n"
 								 "layout(location = 0) out vec3 color;\n"
 								 "void main() {\n"
 								 "float nz = vertex_normal_worldspace.z;\n"
 								 "float factor = 0.5 + 0.5 * abs(nz);\n"
+								 //"color = ka * ca + kd * ci * max(0, vertex_normal_worldspace * l) + ks * ci * pow(max(0, vertex_normal_worldspace * h), phong);\n" 
 								 "color = factor * user_color;\n"
 								 "}";
 
