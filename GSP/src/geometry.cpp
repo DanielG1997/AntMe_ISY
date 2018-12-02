@@ -83,21 +83,28 @@ glm::mat4x4 Geometry::getPerspectiveMatrix(float r, float l, float t, float b, f
 }
 
 glm::mat4x4 Geometry::getCameraMatrix(glm::vec3 u, glm::vec3 v, glm::vec3 w, glm::vec3 e) {
-	glm::mat4x4 matrix;
-	matrix = glm::transpose(glm::mat4x4(glm::vec4(u.x, v.x, w.x, e.x),
-										glm::vec4(u.y, v.y, w.y, e.y),
-										glm::vec4(u.z, v.z, w.z, e.z),
-										glm::vec4(0, 0, 0, 1)
-									   ));
+	glm::mat4x4 camerarotation;
+	glm::mat4x4 cameratranslation;
+	camerarotation = glm::transpose(glm::mat4x4(glm::vec4(u.x, v.x, w.x, 0),
+												glm::vec4(u.y, v.y, w.y, 0),
+												glm::vec4(u.z, v.z, w.z, 0),
+												glm::vec4(0, 0, 0, 1)
+											   ));
+	cameratranslation = glm::transpose(glm::mat4x4(glm::vec4(1, 0, 0, e.x),
+												   glm::vec4(0, 1, 0, e.y),
+												   glm::vec4(0, 0, 1, e.z),
+												   glm::vec4(0, 0, 0, 1)
+												  ));
+	glm::mat4x4 matrix = glm::inverse(cameratranslation * camerarotation);
 	return matrix;
 }
 
-glm::mat4x4 Geometry::getViewMatrix(float x, float y) {
-	glm::mat4x4 matrix;
-	matrix = glm::transpose(glm::mat4x4(glm::vec4(x / 2, 0, 0, (x - 1) / 2),
-										glm::vec4(0, y / 2, 0, (y -1) / 2),
-										glm::vec4(0, 0, 1, 0),
-										glm::vec4(0, 0, 0, 1)
-									   ));
-	return matrix;
-}
+//glm::mat4x4 Geometry::getViewMatrix(float x, float y) {
+//	glm::mat4x4 matrix;
+//	matrix = glm::transpose(glm::mat4x4(glm::vec4(x / 2, 0, 0, (x - 1) / 2),
+//										glm::vec4(0, y / 2, 0, (y -1) / 2),
+//										glm::vec4(0, 0, 1, 0),
+//										glm::vec4(0, 0, 0, 1)
+//									   ));
+//	return matrix;
+//}

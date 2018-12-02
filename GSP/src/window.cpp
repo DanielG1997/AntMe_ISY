@@ -156,27 +156,32 @@ void Window::drawTetrahedron(float degrees) {
 	};
 
 
+	//projection settings
+
+	//camera position
+	glm::vec3 e = glm::vec3(1, 1, 0);
+	//centre of interest
+	glm::vec3 c = glm::vec3(0, 0, 0);
+	//calculation, u' = y = (0, 1, 0)
+	glm::vec3 b = -glm::normalize(c - e);
+	glm::vec3 s = glm::normalize(glm::cross(glm::vec3(0, 1, 0), b));
+	glm::vec3 u = glm::cross(b, s);
+
+	//now build projection matrix
+	//order: right, left, top, bottom, far, near
+	glm::mat4x4 perspective = this->getPerspectiveMatrix(2, -2, 1.5, -1.5, 3, 1);
+	glm::mat4x4 camera = this->getCameraMatrix(s, u, b, e);
+	//glm::mat4x4 view = this->getViewMatrix(960, 600);
+
+	glm::mat4x4 projection = perspective * camera;
+
 	//operations todo
-	//glm::mat4x4 view = glm::translate(view, glm::vec3(0.0f, 0.0f, -0.3f));
-	//glm::mat4x4 projection = glm::perspective(glm::radians(45.0f), (float) 960 / (float) 600, 0.1f, 100.0f);
-	glm::vec3 u = glm::vec3(1, 0, 0);
-	glm::vec3 w = glm::vec3(0, 1, 0);
-	glm::vec3 v = glm::vec3(0, 0, 1);
-	glm::vec3 e = glm::vec3(0, 0, 0);
-
-	//width and height of window
-	float x = 600.0;
-	float y = 960.0;
-
-	glm::mat4x4 perspective = this->getPerspectiveMatrix(1, -1, 1, -1, 1, -1);
-	glm::mat4x4 camera = this->getCameraMatrix(u, v, w, e);
-	glm::mat4x4 view = this->getViewMatrix(x, y);
-
 	glm::mat4x4 rotationX = this->getRotationMatrix('x', degrees);
 	glm::mat4x4 rotationY = this->getRotationMatrix('y', degrees);
 	glm::mat4x4 rotationZ = this->getRotationMatrix('z', degrees);
 
-	glm::mat4x4 operations = rotationY;
+	//final matrix
+	glm::mat4x4 operations = projection * rotationY;
 
 	const char* vertexsource =  "#version 330 core\n"
 							    "uniform mat4 model_to_world_matrix;\n"
