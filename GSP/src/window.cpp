@@ -214,7 +214,7 @@ void Window::drawTetrahedron(float degrees) {
 
 	glEnable(GL_DEPTH_TEST);
 	GLint uniformmatrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
-	glUniformMatrix4fv(uniformmatrixlocation, 1, GL_TRUE, glm::value_ptr(operations));
+	glUniformMatrix4fv(uniformmatrixlocation, 1, GL_FALSE, glm::value_ptr(operations));
 	GLint uniformcolorlocation = glGetUniformLocation(shaderprogram, "user_color");
 	glUniform3f(uniformcolorlocation, 0.0f, 1.0f, 0.0f);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
