@@ -185,19 +185,28 @@ void Window::drawTetrahedron(float degrees) {
 
 	const char* vertexsource =  "#version 330 core\n"
 							    "uniform mat4 model_to_world_matrix;\n"
+								//"uniform vec3 lightposition;\n"
 								"layout(location = 0) in vec3 vertex_position;\n"
 								"layout(location = 1) in vec3 normal_position;\n"
 								"out vec3 vertex_normal_worldspace;\n"
+								//"out vec3 h;\n"
+								//"out vec3 l;\n"
 								"void main() {\n"
-								"gl_Position = model_to_world_matrix * vec4((vertex_position), 1.0f);\n"
+								"vec4 position = model_to_world_matrix * vec4((vertex_position), 1.0f);\n"
 								"vertex_normal_worldspace = (transpose(inverse(model_to_world_matrix)) * vec4((normal_position), 0.0)).xyz;\n"
+								//"vec3 v = normalize(-position.xyz);\n"
+								//"l = normalize(lightposition - position.xyz);\n"
+								//"h = normalize(v + l);\n"
+								"gl_Position = position;\n"
 								"}";
 
 	const char* fragmentsource = "#version 330 core\n"
 								 "in vec3 vertex_normal_worldspace;\n"
-								 "uniform vec3 user_color;\n"
-								 //"uniform vec3 ka, kd, ks, ca, ci, l, h;\n"
+								 //"in vec3 h;\n"
+								 //"in vec3 l;\n"
+								 //"uniform vec3 ka, kd, ks, ca, ci;\n"
 								 //"uniform float phong;\n"
+								 "uniform vec3 user_color;\n"
 								 "layout(location = 0) out vec3 color;\n"
 								 "void main() {\n"
 								 "float nz = vertex_normal_worldspace.z;\n"
@@ -220,6 +229,9 @@ void Window::drawTetrahedron(float degrees) {
 	glEnable(GL_DEPTH_TEST);
 
 	//lightinformation using only one lightsource
+	//lightposition
+	GLint lightlocation = glGetUniformLocation(shaderprogram, "lightposition");
+	glUniform3f(lightlocation, 0.0f, 0.0f, 0.0f);
 	//ambient coefficient
 	GLint kalocation = glGetUniformLocation(shaderprogram, "ka");
 	glUniform3f(kalocation, 0.0f, 0.0f, 0.0f);
@@ -235,12 +247,6 @@ void Window::drawTetrahedron(float degrees) {
 	//lightsourcecolor
 	GLint cilocation = glGetUniformLocation(shaderprogram, "ci");
 	glUniform3f(cilocation, 0.0f, 0.0f, 0.0f);
-	//vertex to light
-	GLint llocation = glGetUniformLocation(shaderprogram, "l");
-	glUniform3f(llocation, 0.0f, 0.0f, 0.0f);
-	//halfvertex to light
-	GLint hlocation = glGetUniformLocation(shaderprogram, "h");
-	glUniform3f(hlocation, 0.0f, 0.0f, 0.0f);
 	//phong value
 	GLint phonglocation = glGetUniformLocation(shaderprogram, "phong");
 	glUniform1f(phonglocation, 0.0f);
