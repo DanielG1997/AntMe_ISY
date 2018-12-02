@@ -169,7 +169,7 @@ void Window::drawTetrahedron(float degrees) {
 
 	//now build projection matrix
 	//order: right, left, top, bottom, far, near
-	glm::mat4x4 perspective = this->getPerspectiveMatrix(2, -2, 1.5, -1.5, 3, 1);
+	glm::mat4x4 perspective = this->getPerspectiveMatrix(8, -8, 5, -5, 2, 1);
 	glm::mat4x4 camera = this->getCameraMatrix(s, u, b, e);
 	//glm::mat4x4 view = this->getViewMatrix(960, 600);
 
@@ -197,13 +197,13 @@ void Window::drawTetrahedron(float degrees) {
 								 "in vec3 vertex_normal_worldspace;\n"
 								 "uniform vec3 user_color;\n"
 								 //"uniform vec3 ka, kd, ks, ca, ci, l, h;\n"
-								 //"uniform int phong;\n"
+								 //"uniform float phong;\n"
 								 "layout(location = 0) out vec3 color;\n"
 								 "void main() {\n"
 								 "float nz = vertex_normal_worldspace.z;\n"
 								 "float factor = 0.5 + 0.5 * abs(nz);\n"
-								 //"color = ka * ca + kd * ci * max(0, vertex_normal_worldspace * l) + ks * ci * pow(max(0, vertex_normal_worldspace * h), phong);\n" 
 								 "color = factor * user_color;\n"
+								 //"color = ka * ca + kd * ci * max(0.0, vertex_normal_worldspace * l) + ks * ci * pow(max(0.0, vertex_normal_worldspace * h), phong);\n" 
 								 "}";
 
 	GLuint shaderprogram = this->createProgramWithShaders(vertexsource, fragmentsource);
@@ -218,17 +218,48 @@ void Window::drawTetrahedron(float degrees) {
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 2*size, (void*)size);
 
 	glEnable(GL_DEPTH_TEST);
-	GLint uniformmatrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
-	glUniformMatrix4fv(uniformmatrixlocation, 1, GL_FALSE, glm::value_ptr(operations));
-	GLint uniformcolorlocation = glGetUniformLocation(shaderprogram, "user_color");
-	glUniform3f(uniformcolorlocation, 0.0f, 1.0f, 0.0f);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
-	glUniform3f(uniformcolorlocation, 1.0f, 0.0f, 0.0f);
-	glDrawArrays(GL_TRIANGLES, 3, 3);
-	glUniform3f(uniformcolorlocation, 1.0f, 1.0f, 0.0f);
-	glDrawArrays(GL_TRIANGLES, 6, 3);
-	glUniform3f(uniformcolorlocation, 0.0f, 0.0f, 1.0f);
-	glDrawArrays(GL_TRIANGLES, 9, 3);
+
+	//lightinformation using only one lightsource
+	//ambient coefficient
+	GLint kalocation = glGetUniformLocation(shaderprogram, "ka");
+	glUniform3f(kalocation, 0.0f, 0.0f, 0.0f);
+	//diffuse coefficient
+	GLint kdlocation = glGetUniformLocation(shaderprogram, "kd");
+	glUniform3f(kdlocation, 0.0f, 0.0f, 0.0f);
+	//specular coefficient
+	GLint kslocation = glGetUniformLocation(shaderprogram, "ks");
+	glUniform3f(kslocation, 0.0f, 0.0f, 0.0f);
+	//amibient light
+	GLint calocation = glGetUniformLocation(shaderprogram, "ca");
+	glUniform3f(calocation, 0.0f, 0.0f, 0.0f);
+	//lightsourcecolor
+	GLint cilocation = glGetUniformLocation(shaderprogram, "ci");
+	glUniform3f(cilocation, 0.0f, 0.0f, 0.0f);
+	//vertex to light
+	GLint llocation = glGetUniformLocation(shaderprogram, "l");
+	glUniform3f(llocation, 0.0f, 0.0f, 0.0f);
+	//halfvertex to light
+	GLint hlocation = glGetUniformLocation(shaderprogram, "h");
+	glUniform3f(hlocation, 0.0f, 0.0f, 0.0f);
+	//phong value
+	GLint phonglocation = glGetUniformLocation(shaderprogram, "phong");
+	glUniform1f(phonglocation, 0.0f);
+
+	//triangleinformation
+	GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
+	glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(operations));
+	//colors
+	GLint colorlocation = glGetUniformLocation(shaderprogram, "user_color");
+	glUniform3f(colorlocation, 0.0f, 1.0f, 0.0f);
+	glDrawArrays(GL_TRIANGLES, 0, 12);
+	//glUniform3f(uniformcolorlocation, 0.0f, 1.0f, 0.0f);
+	//glDrawArrays(GL_TRIANGLES, 0, 3);
+	//glUniform3f(uniformcolorlocation, 1.0f, 0.0f, 0.0f);
+	//glDrawArrays(GL_TRIANGLES, 3, 3);
+	//glUniform3f(uniformcolorlocation, 1.0f, 1.0f, 0.0f);
+	//glDrawArrays(GL_TRIANGLES, 6, 3);
+	//glUniform3f(uniformcolorlocation, 0.0f, 0.0f, 1.0f);
+	//glDrawArrays(GL_TRIANGLES, 9, 3);
 
 	this->deleteShaderObjects();
 }

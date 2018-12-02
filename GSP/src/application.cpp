@@ -60,7 +60,7 @@ int Application::Run() {
 		Sleep(100);
     }
 	if (flag) {
-		window_.setColor(1, 1, 1, 1);
+		//window_.setColor(1, 1, 1, 1);
 		window_.clear();
 		window_.drawTetrahedron(degrees);
 		degrees = (degrees + 1);
