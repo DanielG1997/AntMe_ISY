@@ -160,7 +160,7 @@ void Window::drawTetrahedron(float degrees) {
 
 	//camera position
 	glm::vec3 e = glm::vec3(1, 1, 0);
-	//centre of interest
+	//center of interest
 	glm::vec3 c = glm::vec3(0, 0, 0);
 	//calculation, u' = y = (0, 1, 0)
 	glm::vec3 b = -glm::normalize(c - e);
