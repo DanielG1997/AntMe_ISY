@@ -186,6 +186,7 @@ void Window::drawTetrahedron(float degrees) {
 	const char* vertexsource =  "#version 330 core\n"
 							    "uniform mat4 model_to_world_matrix;\n"
 								//"uniform vec3 lightposition;\n"
+								//"uniform vec3 cameraposition;\n"
 								"layout(location = 0) in vec3 vertex_position;\n"
 								"layout(location = 1) in vec3 normal_position;\n"
 								"out vec3 vertex_normal_worldspace;\n"
@@ -194,7 +195,7 @@ void Window::drawTetrahedron(float degrees) {
 								"void main() {\n"
 								"vec4 position = model_to_world_matrix * vec4((vertex_position), 1.0f);\n"
 								"vertex_normal_worldspace = (transpose(inverse(model_to_world_matrix)) * vec4((normal_position), 0.0)).xyz;\n"
-								//"vec3 v = normalize(-position.xyz);\n"
+								//"vec3 v = normalize(cameraposition - position.xyz);\n"
 								//"l = normalize(lightposition - position.xyz);\n"
 								//"h = normalize(v + l);\n"
 								"gl_Position = position;\n"
@@ -229,6 +230,9 @@ void Window::drawTetrahedron(float degrees) {
 	glEnable(GL_DEPTH_TEST);
 
 	//lightinformation using only one lightsource
+	//cameraposition
+	GLint cameralocation = glGetUniformLocation(shaderprogram, "cameraposition");
+	glUniform3f(cameralocation, e.x, e.y, e.z);
 	//lightposition
 	GLint lightlocation = glGetUniformLocation(shaderprogram, "lightposition");
 	glUniform3f(lightlocation, 0.0f, 0.0f, 0.0f);
