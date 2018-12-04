@@ -185,35 +185,36 @@ void Window::drawTetrahedron(float degrees) {
 
 	const char* vertexsource =  "#version 330 core\n"
 							    "uniform mat4 model_to_world_matrix;\n"
-								//"uniform vec3 lightposition;\n"
-								//"uniform vec3 cameraposition;\n"
+								"uniform vec3 lightposition;\n"
+								"uniform vec3 cameraposition;\n"
 								"layout(location = 0) in vec3 vertex_position;\n"
 								"layout(location = 1) in vec3 normal_position;\n"
 								"out vec3 vertex_normal_worldspace;\n"
-								//"out vec3 h;\n"
-								//"out vec3 l;\n"
+								"out vec3 h;\n"
+								"out vec3 l;\n"
 								"void main() {\n"
 								"vec4 position = model_to_world_matrix * vec4((vertex_position), 1.0f);\n"
 								"vertex_normal_worldspace = (transpose(inverse(model_to_world_matrix)) * vec4((normal_position), 0.0)).xyz;\n"
-								//"vec3 v = normalize(cameraposition - position.xyz);\n"
-								//"l = normalize(lightposition - position.xyz);\n"
-								//"h = normalize(v + l);\n"
+								"vec3 v = normalize(cameraposition - position.xyz);\n"
+								"l = normalize(lightposition - position.xyz);\n"
+								"h = normalize(v + l);\n"
 								"gl_Position = position;\n"
 								"}";
 
 	const char* fragmentsource = "#version 330 core\n"
 								 "in vec3 vertex_normal_worldspace;\n"
-								 //"in vec3 h;\n"
-								 //"in vec3 l;\n"
-								 //"uniform vec3 ka, kd, ks, ca, ci;\n"
-								 //"uniform float phong;\n"
+								 "in vec3 h;\n"
+								 "in vec3 l;\n"
+								 "uniform vec3 ka, kd, ks, ca, ci;\n"
+								 "uniform float phong;\n"
 								 "uniform vec3 user_color;\n"
 								 "layout(location = 0) out vec3 color;\n"
 								 "void main() {\n"
-								 "float nz = vertex_normal_worldspace.z;\n"
-								 "float factor = 0.5 + 0.5 * abs(nz);\n"
-								 "color = factor * user_color;\n"
-								 //"color = ka * ca + kd * ci * max(0.0, vertex_normal_worldspace * l) + ks * ci * pow(max(0.0, vertex_normal_worldspace * h), phong);\n" 
+								 //"float nz = vertex_normal_worldspace.z;\n"
+								 //"float factor = 0.5 + 0.5 * abs(nz);\n"
+								 //"color = factor * user_color;\n"
+								 "vec3 intensity = ka * ca + kd * ci * max(0.0f, dot(vertex_normal_worldspace, l)) + ks * ci * pow(max(0.0f, dot(vertex_normal_worldspace, h)), phong);\n"
+								 "color = intensity * user_color;\n"
 								 "}";
 
 	GLuint shaderprogram = this->createProgramWithShaders(vertexsource, fragmentsource);
@@ -235,25 +236,25 @@ void Window::drawTetrahedron(float degrees) {
 	glUniform3f(cameralocation, e.x, e.y, e.z);
 	//lightposition
 	GLint lightlocation = glGetUniformLocation(shaderprogram, "lightposition");
-	glUniform3f(lightlocation, 0.0f, 0.0f, 0.0f);
+	glUniform3f(lightlocation, 1.0f, 0.0f, 0.0f);
 	//ambient coefficient
 	GLint kalocation = glGetUniformLocation(shaderprogram, "ka");
-	glUniform3f(kalocation, 0.0f, 0.0f, 0.0f);
+	glUniform3f(kalocation, 1.0f, 1.0f, 1.0f);
 	//diffuse coefficient
 	GLint kdlocation = glGetUniformLocation(shaderprogram, "kd");
-	glUniform3f(kdlocation, 0.0f, 0.0f, 0.0f);
+	glUniform3f(kdlocation, 1.0f, 1.0f, 1.0f);
 	//specular coefficient
 	GLint kslocation = glGetUniformLocation(shaderprogram, "ks");
-	glUniform3f(kslocation, 0.0f, 0.0f, 0.0f);
+	glUniform3f(kslocation, 1.0f, 1.0f, 1.0f);
 	//amibient light
 	GLint calocation = glGetUniformLocation(shaderprogram, "ca");
-	glUniform3f(calocation, 0.0f, 0.0f, 0.0f);
+	glUniform3f(calocation, 1.0f, 1.0f, 1.0f);
 	//lightsourcecolor
 	GLint cilocation = glGetUniformLocation(shaderprogram, "ci");
-	glUniform3f(cilocation, 0.0f, 0.0f, 0.0f);
+	glUniform3f(cilocation, 1.0f, 1.0f, 0.0f);
 	//phong value
 	GLint phonglocation = glGetUniformLocation(shaderprogram, "phong");
-	glUniform1f(phonglocation, 0.0f);
+	glUniform1f(phonglocation, 5.0f);
 
 	//triangleinformation
 	GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
