@@ -236,16 +236,16 @@ void Window::drawTetrahedron(float degrees) {
 	glUniform3f(cameralocation, e.x, e.y, e.z);
 	//lightposition
 	GLint lightlocation = glGetUniformLocation(shaderprogram, "lightposition");
-	glUniform3f(lightlocation, 1.0f, 0.0f, 0.0f);
+	glUniform3f(lightlocation, 1.0f, 1.0f, 0.0f);
 	//ambient coefficient
 	GLint kalocation = glGetUniformLocation(shaderprogram, "ka");
-	glUniform3f(kalocation, 1.0f, 1.0f, 1.0f);
+	glUniform3f(kalocation, 0.5f, 0.5f, 0.5f);
 	//diffuse coefficient
 	GLint kdlocation = glGetUniformLocation(shaderprogram, "kd");
-	glUniform3f(kdlocation, 1.0f, 1.0f, 1.0f);
+	glUniform3f(kdlocation, 0.5f, 0.5f, 0.5f);
 	//specular coefficient
 	GLint kslocation = glGetUniformLocation(shaderprogram, "ks");
-	glUniform3f(kslocation, 1.0f, 1.0f, 1.0f);
+	glUniform3f(kslocation, 0.5f, 0.5f, 0.5f);
 	//amibient light
 	GLint calocation = glGetUniformLocation(shaderprogram, "ca");
 	glUniform3f(calocation, 1.0f, 1.0f, 1.0f);
