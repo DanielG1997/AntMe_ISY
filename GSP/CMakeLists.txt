@@ -19,6 +19,13 @@ add_executable(GSP
   src/geometry.cpp
   src/window.cpp
   src/window.hpp
+  src/scene.cpp
+  src/scene.hpp
+  src/renderer.cpp
+  src/renderer.hpp
+  src/maze.cpp
+  src/maze.hpp
+  object/maze.obj  
   )
 
 find_package(OpenGL REQUIRED)
