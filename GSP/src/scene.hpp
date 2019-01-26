@@ -9,7 +9,7 @@ class Scene {
  public:
 	 Scene();
  private:
-	 char* filename = "maze.obj";
+	 const std::string filename = "maze.obj";
 	 const aiScene* scene;
 };
 

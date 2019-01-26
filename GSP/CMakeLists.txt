@@ -25,7 +25,8 @@ add_executable(GSP
   src/renderer.hpp
   src/maze.cpp
   src/maze.hpp
-  object/maze.obj  
+  object/ufo.obj
+  object/ufo.mtl   
   )
 
 find_package(OpenGL REQUIRED)
