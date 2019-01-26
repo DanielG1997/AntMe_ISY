@@ -1,9 +1,9 @@
 #ifndef SCENE_HPP_
 #define SCENE_HPP_
 
-#include <Importer.hpp>
-#include <scene.h>
-#include <postprocess.h>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 class Scene {
  public:
