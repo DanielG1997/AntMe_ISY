@@ -3,14 +3,13 @@
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
-#include <assimp/postprocess.h>
+
 
 class Scene {
  public:
 	 Scene();
  private:
-	 const std::string filename = "ufo.obj";
-	 const aiScene* scene;
+	 const char* filename = /*"C:/Users/Daniel/Documents/GitHub/AntMe_ISY/GSP/object/ufo.obj";*/R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\ufo.obj)";
 };
 
 #endif  // SCENE_HPP_

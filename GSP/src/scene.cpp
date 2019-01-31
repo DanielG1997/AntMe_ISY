@@ -3,9 +3,8 @@
 Scene::Scene() {
 	Assimp::Importer importer;
 
-	scene = importer.ReadFile(filename,
-		aiProcess_CalcTangentSpace |
-		aiProcess_SortByPType);
+	const aiScene* scene = importer.ReadFile(filename, 0);
+	//FILE* file = fopen(filename, "r");
 
 	if (!scene)
 	{

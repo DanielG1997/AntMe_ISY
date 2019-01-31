@@ -1,9 +1,11 @@
 #include "application.hpp"
+#include "scene.hpp"
 #include <iostream>
 
 Application::Application() : window_(960, 600) {}
 
 int Application::Run() {
+	Scene sc;
   SDL_Event event;
   bool runs = true;
   bool flag = false;
