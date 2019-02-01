@@ -15,7 +15,7 @@ class Geometry{
 	 glm::mat4x4 getScaleMatrix(glm::vec3 scale);
 	 glm::mat4x4 getShearMatrix(char axis, glm::vec3 shear);
 	 glm::mat4x4 getPerspectiveMatrix(float r, float l, float t, float b, float f, float n);
-	 glm::mat4x4 getCameraMatrix(glm::vec3 u, glm::vec3 v, glm::vec3 w, glm::vec3 e);
+	 glm::mat4x4 getCameraMatrix(glm::vec3 u, glm::vec3 v, glm::vec3 w, glm::vec3 e, char type);
 	 //glm::mat4x4 getViewMatrix(float x, float y);
 };
 

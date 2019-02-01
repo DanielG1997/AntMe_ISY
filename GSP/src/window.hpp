@@ -6,7 +6,7 @@
 #include <GLEW/glew.h>
 #include <Windows.h>
 
-class Window : public Geometry{
+class Window{
  public:
   Window(unsigned int width, unsigned int height);
 
@@ -14,20 +14,20 @@ class Window : public Geometry{
   void clear();
   void swap();
 
-  void drawTriangles();
-  void drawTetrahedron(float degrees);
+  //void drawTriangles();
+  //void drawTetrahedron(float degrees);
 
-  GLuint createProgramWithShaders(const char* vertexsource, const char* fragmentsource);
-  void deleteShaderObjects();
+  //GLuint createProgramWithShaders(const char* vertexsource, const char* fragmentsource);
+  //void deleteShaderObjects();
 
  private:
   SDL_Window* window_ = nullptr;
 
-  GLuint vertexobject;
-  GLuint bufferobject;
-  GLuint vertexshader;
-  GLuint fragmentshader;
-  GLuint shaderprogram;
+  //GLuint vertexobject;
+  //GLuint bufferobject;
+  //GLuint vertexshader;
+  //GLuint fragmentshader;
+  //GLuint shaderprogram;
 };
 
 #endif  // WINDOW_HPP_

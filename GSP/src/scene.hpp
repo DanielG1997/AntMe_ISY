@@ -9,7 +9,7 @@ class Scene {
  public:
 	 Scene();
  private:
-	 const char* filename = /*"C:/Users/Daniel/Documents/GitHub/AntMe_ISY/GSP/object/ufo.obj";*/R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\ufo.obj)";
+	 const std::string filename = R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\ufo.obj)";
 };
 
 #endif  // SCENE_HPP_

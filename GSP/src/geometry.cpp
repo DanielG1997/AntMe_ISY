@@ -82,7 +82,7 @@ glm::mat4x4 Geometry::getPerspectiveMatrix(float r, float l, float t, float b, f
 	return matrix;
 }
 
-glm::mat4x4 Geometry::getCameraMatrix(glm::vec3 u, glm::vec3 v, glm::vec3 w, glm::vec3 e) {
+glm::mat4x4 Geometry::getCameraMatrix(glm::vec3 u, glm::vec3 v, glm::vec3 w, glm::vec3 e, char type) {
 	glm::mat4x4 camerarotation;
 	glm::mat4x4 cameratranslation;
 	camerarotation = glm::transpose(glm::mat4x4(glm::vec4(u.x, v.x, w.x, 0),
@@ -95,8 +95,14 @@ glm::mat4x4 Geometry::getCameraMatrix(glm::vec3 u, glm::vec3 v, glm::vec3 w, glm
 												   glm::vec4(0, 0, 1, e.z),
 												   glm::vec4(0, 0, 0, 1)
 												  ));
-	glm::mat4x4 matrix = glm::inverse(cameratranslation * camerarotation);
-	return matrix;
+	if (type == 'T' || type == 't')
+		return cameratranslation;
+	else if (type == 'R' || type == 'r')
+		return camerarotation;
+	else {
+		glm::mat4x4 matrix = glm::inverse(cameratranslation * camerarotation);
+		return matrix;
+	}
 }
 
 //glm::mat4x4 Geometry::getViewMatrix(float x, float y) {

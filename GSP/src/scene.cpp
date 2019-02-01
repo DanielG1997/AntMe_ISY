@@ -1,13 +1,12 @@
 #include "scene.hpp"
 
 Scene::Scene() {
-	Assimp::Importer importer;
+	//Assimp::Importer importer;
 
-	const aiScene* scene = importer.ReadFile(filename, 0);
-	//FILE* file = fopen(filename, "r");
+	//const aiScene* scene = importer.ReadFile(filename, 0);
 
-	if (!scene)
-	{
-		printf("%s\n", importer.GetErrorString());
-	}
+	//if (!scene)
+	//{
+	//	printf("%s\n", importer.GetErrorString());
+	//}
 }
