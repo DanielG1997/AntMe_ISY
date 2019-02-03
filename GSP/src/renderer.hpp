@@ -1,12 +1,11 @@
 #ifndef RENDERER_HPP_
 #define RENDERER_HPP_
 
-#include "window.hpp"
+#include "scene.hpp"
 
 class Renderer : public Geometry {
 public:
 	Renderer(Window* window);
-	//~Renderer() { delete[] vertexsource; delete[] fragmentsource; }
 
 	GLuint createShaderProgram();
 	void deleteShaderProgram();
@@ -16,6 +15,7 @@ public:
 	glm::mat4x4 turn(float angle, glm::mat4x4 trans, glm::mat4x4 rot);
 
 private:
+	//std::vector<Mesh> meshes;
 	Window* window;
 
 	GLuint vertexobject;

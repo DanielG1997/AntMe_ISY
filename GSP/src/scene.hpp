@@ -1,15 +1,17 @@
 #ifndef SCENE_HPP_
 #define SCENE_HPP_
 
+#include "window.hpp"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <vector>
+#include <stdio.h>
 
 struct Vertex {
-	glm::vec3 Position;
-	glm::vec3 Normal;
-	glm::vec2 TexCoords;
+	glm::vec3 position;
+	glm::vec3 normal;
+	glm::vec2 texture;
 };
 
 struct Texture {
@@ -18,8 +20,10 @@ struct Texture {
 };
 
 struct Mesh {
-	std::vector<Vertex>* vertices;
-	std::vector<Texture>* textures;
+	std::vector<Vertex> vertices;
+	std::vector<Texture> textures;
+
+	Mesh(std::vector<Vertex> vertices, std::vector<Texture> textures) { this->vertices = vertices; this->textures = textures; };
 };
 
 class Scene {
@@ -33,7 +37,6 @@ class Scene {
 
 	 void processNode(aiNode* node, const aiScene* scene);
 	 Mesh processMesh(aiMesh* mesh, const aiScene* scene);
-	 std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
 };
 
 #endif  // SCENE_HPP_

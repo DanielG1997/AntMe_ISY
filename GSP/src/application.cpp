@@ -31,11 +31,11 @@ int Application::Run() {
 		else if (event.type == SDL_KEYDOWN) {
 			switch (event.key.keysym.scancode) {
 				case SDL_SCANCODE_W :
-					cameratranslation = renderer.move(-0.1, cameratranslation, camerarotation);
+					cameratranslation = renderer.move(-0.1f, cameratranslation, camerarotation);
 					break;
 
 				case SDL_SCANCODE_S:
-					cameratranslation = renderer.move(0.1, cameratranslation, camerarotation);
+					cameratranslation = renderer.move(0.1f, cameratranslation, camerarotation);
 					break;
 
 				case SDL_SCANCODE_A:
