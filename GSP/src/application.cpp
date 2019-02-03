@@ -7,7 +7,7 @@ Application::Application() : window_(960, 600) {}
 int Application::Run() {
   Renderer renderer(&this->window_);
 
-  glm::vec3 e = glm::vec3(0, 2, 10);
+  glm::vec3 e = glm::vec3(0, 2, 2);
   glm::vec3 c = glm::vec3(0, 0, 0);
   glm::vec3 b = -glm::normalize(c - e);
   glm::vec3 s = glm::normalize(glm::cross(glm::vec3(0, 1, 0), b));
@@ -21,6 +21,7 @@ int Application::Run() {
   //bool flag = false;
   //float degrees = 0.0;
   while (runs) {
+	window_.setColor(0.0, 0.5, 1.0, 1.0);
     while (SDL_PollEvent(&event)) {
 		window_.clear();
 		if (event.type == SDL_QUIT) {
@@ -30,19 +31,19 @@ int Application::Run() {
 		else if (event.type == SDL_KEYDOWN) {
 			switch (event.key.keysym.scancode) {
 				case SDL_SCANCODE_W :
-					cameratranslation = renderer.move(-0.25f, cameratranslation, camerarotation);
+					cameratranslation = renderer.move(-0.1, cameratranslation, camerarotation);
 					break;
 
 				case SDL_SCANCODE_S:
-					cameratranslation = renderer.move(0.25f, cameratranslation, camerarotation);
+					cameratranslation = renderer.move(0.1, cameratranslation, camerarotation);
 					break;
 
 				case SDL_SCANCODE_A:
-					camerarotation = renderer.turn(10 * glm::pi<float>() / 180, cameratranslation, camerarotation);
+					camerarotation = renderer.turn(-45 * glm::pi<float>() / 180, cameratranslation, camerarotation);
 					break;
 
 				case SDL_SCANCODE_D:
-					camerarotation = renderer.turn(-10 * glm::pi<float>() / 180, cameratranslation, camerarotation);
+					camerarotation = renderer.turn(45 * glm::pi<float>() / 180, cameratranslation, camerarotation);
 					break;
 
 				default:

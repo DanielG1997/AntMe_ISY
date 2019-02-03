@@ -109,7 +109,7 @@ void Renderer::draw(glm::mat4x4 camT, glm::mat4x4 camR) {
 						 v0,n3,v1,n3,v3,n3
 	};
 	/**********************************************************************************************************************/
-	glm::mat4x4 perspective = this->getPerspectiveMatrix(8, -8, 5, -5, 10, 1);
+	glm::mat4x4 perspective = this->getPerspectiveMatrix(8, -8, 5, -5, 5, 1);//glm::perspective(45.0, 1 / (double)(960 / 600), 1.0, 50.0);
 	glm::mat4x4 camera = glm::inverse(camT * camR);
 
 	glm::mat4x4 projection = perspective * camera;
@@ -134,7 +134,7 @@ void Renderer::draw(glm::mat4x4 camT, glm::mat4x4 camR) {
 	glUniform3f(cameralocation, campos.x, campos.y, campos.z);
 	//lightposition
 	GLint lightlocation = glGetUniformLocation(shaderprogram, "lightposition");
-	glUniform3f(lightlocation, 1.0f, 1.0f, 0.0f);
+	glUniform3f(lightlocation, 0.0f, 10.0f, 0.0f);
 	//ambient coefficient
 	GLint kalocation = glGetUniformLocation(shaderprogram, "ka");
 	glUniform3f(kalocation, 0.5f, 0.5f, 0.5f);
@@ -160,8 +160,15 @@ void Renderer::draw(glm::mat4x4 camT, glm::mat4x4 camR) {
 	//colors
 	GLint colorlocation = glGetUniformLocation(shaderprogram, "user_color");
 	glUniform3f(colorlocation, 0.0f, 1.0f, 0.0f);
-	glDrawArrays(GL_TRIANGLES, 0, 12);
-
+	//glDrawArrays(GL_TRIANGLES, 0, 12);
+	glUniform3f(colorlocation, 0.0f, 1.0f, 0.0f);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glUniform3f(colorlocation, 1.0f, 0.0f, 0.0f);
+	glDrawArrays(GL_TRIANGLES, 3, 3);
+	glUniform3f(colorlocation, 1.0f, 1.0f, 0.0f);
+	glDrawArrays(GL_TRIANGLES, 6, 3);
+	glUniform3f(colorlocation, 0.0f, 0.0f, 1.0f);
+	glDrawArrays(GL_TRIANGLES, 9, 3);
 	this->deleteShaderProgram();
 }
 
