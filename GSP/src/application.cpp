@@ -1,12 +1,10 @@
 #include "application.hpp"
-#include "scene.hpp"
 #include <iostream>
 
-Application::Application() : window_(960, 600) {}
+Application::Application() : window_(960, 600), scene_() {}
 
 int Application::Run() {
-  Renderer renderer(&this->window_);
-
+  Renderer renderer(&this->window_, &this->scene_);
   glm::vec3 e = glm::vec3(0, 2, 2);
   glm::vec3 c = glm::vec3(0, 0, 0);
   glm::vec3 b = -glm::normalize(c - e);
@@ -39,11 +37,11 @@ int Application::Run() {
 					break;
 
 				case SDL_SCANCODE_A:
-					camerarotation = renderer.turn(-45 * glm::pi<float>() / 180, cameratranslation, camerarotation);
+					camerarotation = renderer.turn(-45 * glm::pi<float>() / 180, camerarotation);
 					break;
 
 				case SDL_SCANCODE_D:
-					camerarotation = renderer.turn(45 * glm::pi<float>() / 180, cameratranslation, camerarotation);
+					camerarotation = renderer.turn(45 * glm::pi<float>() / 180, camerarotation);
 					break;
 
 				default:

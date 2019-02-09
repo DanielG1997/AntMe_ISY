@@ -1,7 +1,8 @@
 #include "renderer.hpp"
 
-Renderer::Renderer(Window* window) {
+Renderer::Renderer(Window* window, Scene* scene) {
 	this->window = window;
+	this->scene = scene;
 	//create VBO and VAO
 	glGenVertexArrays(1, &vertexobject);
 	glGenBuffers(1, &bufferobject);
@@ -89,47 +90,47 @@ void Renderer::deleteShaderProgram() {
 }
 
 void Renderer::draw(glm::mat4x4 camT, glm::mat4x4 camR) {
-	glm::vec3 v0 = glm::vec3(-0.6, -0.6, 0.39);
-	glm::vec3 v1 = glm::vec3(0.6, -0.6, 0.39);
-	glm::vec3 v2 = glm::vec3(0.0, -0.6, -0.78);
-	glm::vec3 v3 = glm::vec3(0.0, 0.6, 0.0);
-	//normal vertices should be normalized and are pointing away from the triangleside
-	glm::vec3 n0 = glm::cross((v2 - v0), (v1 - v0));
-	n0 = n0 / glm::length(n0);
-	glm::vec3 n1 = glm::cross((v2 - v1), (v3 - v1));
-	n1 = n1 / glm::length(n1);
-	glm::vec3 n2 = glm::cross((v0 - v2), (v3 - v2));
-	n2 = n2 / glm::length(n2);
-	glm::vec3 n3 = glm::cross((v0 - v3), (v1 - v3));
-	n3 = n3 / glm::length(n3);
-	//ground(n0), right(n1), left(n2), back(n3)
-	glm::vec3 data[] = { v0,n0,v1,n0,v2,n0,
-						 v1,n1,v2,n1,v3,n1,
-						 v0,n2,v2,n2,v3,n2,
-						 v0,n3,v1,n3,v3,n3
-	};
+	//glm::vec3 v0 = glm::vec3(-0.6, -0.6, 0.39);
+	//glm::vec3 v1 = glm::vec3(0.6, -0.6, 0.39);
+	//glm::vec3 v2 = glm::vec3(0.0, -0.6, -0.78);
+	//glm::vec3 v3 = glm::vec3(0.0, 0.6, 0.0);
+	////normal vertices should be normalized and are pointing away from the triangleside
+	//glm::vec3 n0 = glm::cross((v2 - v0), (v1 - v0));
+	//n0 = n0 / glm::length(n0);
+	//glm::vec3 n1 = glm::cross((v2 - v1), (v3 - v1));
+	//n1 = n1 / glm::length(n1);
+	//glm::vec3 n2 = glm::cross((v0 - v2), (v3 - v2));
+	//n2 = n2 / glm::length(n2);
+	//glm::vec3 n3 = glm::cross((v0 - v3), (v1 - v3));
+	//n3 = n3 / glm::length(n3);
+	////ground(n0), right(n1), left(n2), back(n3)
+	//glm::vec3 data[] = { v0,n0,v1,n0,v2,n0,
+	//					 v1,n1,v2,n1,v3,n1,
+	//					 v0,n2,v2,n2,v3,n2,
+	//					 v0,n3,v1,n3,v3,n3
+	//};
 	/**********************************************************************************************************************/
-	glm::mat4x4 perspective = this->getPerspectiveMatrix(8, -8, 5, -5, 5, 1);//glm::perspective(45.0, 1 / (double)(960 / 600), 1.0, 50.0);
+	glm::mat4x4 perspective = this->getPerspectiveMatrix(8, -8, 5, -5, 5, 1);
 	glm::mat4x4 camera = glm::inverse(camT * camR);
 
 	glm::mat4x4 projection = perspective * camera;
 
 	GLuint shaderprogram = this->createShaderProgram();
 
-	GLint size = sizeof(glm::vec3);
+	//GLint size = sizeof(glm::vec3);
 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(data), &data, GL_STATIC_DRAW);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(data), &data, GL_STATIC_DRAW);
 
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 2 * size, nullptr);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 2 * size, (void*)size);
+	//glEnableVertexAttribArray(0);
+	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 2 * size, nullptr);
+	//glEnableVertexAttribArray(1);
+	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 2 * size, (void*)size);
 
 	glEnable(GL_DEPTH_TEST);
 
 	//lightinformation using only one lightsource
 	//cameraposition
-	glm::vec3 campos = glm::vec3(camR[3]);
+	glm::vec3 campos = glm::vec3(camT[3]);
 	GLint cameralocation = glGetUniformLocation(shaderprogram, "cameraposition");
 	glUniform3f(cameralocation, campos.x, campos.y, campos.z);
 	//lightposition
@@ -160,15 +161,18 @@ void Renderer::draw(glm::mat4x4 camT, glm::mat4x4 camR) {
 	//colors
 	GLint colorlocation = glGetUniformLocation(shaderprogram, "user_color");
 	glUniform3f(colorlocation, 0.0f, 1.0f, 0.0f);
+
+	this->scene->render(shaderprogram);
+
 	//glDrawArrays(GL_TRIANGLES, 0, 12);
-	glUniform3f(colorlocation, 0.0f, 1.0f, 0.0f);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
-	glUniform3f(colorlocation, 1.0f, 0.0f, 0.0f);
-	glDrawArrays(GL_TRIANGLES, 3, 3);
-	glUniform3f(colorlocation, 1.0f, 1.0f, 0.0f);
-	glDrawArrays(GL_TRIANGLES, 6, 3);
-	glUniform3f(colorlocation, 0.0f, 0.0f, 1.0f);
-	glDrawArrays(GL_TRIANGLES, 9, 3);
+	//glUniform3f(colorlocation, 0.0f, 1.0f, 0.0f);
+	//glDrawArrays(GL_TRIANGLES, 0, 3);
+	//glUniform3f(colorlocation, 1.0f, 0.0f, 0.0f);
+	//glDrawArrays(GL_TRIANGLES, 3, 3);
+	//glUniform3f(colorlocation, 1.0f, 1.0f, 0.0f);
+	//glDrawArrays(GL_TRIANGLES, 6, 3);
+	//glUniform3f(colorlocation, 0.0f, 0.0f, 1.0f);
+	//glDrawArrays(GL_TRIANGLES, 9, 3);
 	this->deleteShaderProgram();
 }
 
@@ -176,6 +180,6 @@ glm::mat4x4 Renderer::move(float dist, glm::mat4x4 trans, glm::mat4x4 rot) {
 	return glm::translate(trans, dist * glm::vec3(rot[2]));
 }
 
-glm::mat4x4 Renderer::turn(float angle, glm::mat4x4 trans, glm::mat4x4 rot) {
+glm::mat4x4 Renderer::turn(float angle, glm::mat4x4 rot) {
 	return glm::rotate(rot, angle, glm::vec3(0, 1, 0));
 }

@@ -5,17 +5,17 @@
 
 class Renderer : public Geometry {
 public:
-	Renderer(Window* window);
+	Renderer(Window* window, Scene* scene);
 
 	GLuint createShaderProgram();
 	void deleteShaderProgram();
 
 	void draw(glm::mat4x4 camT, glm::mat4x4 camR);
 	glm::mat4x4 move(float dist, glm::mat4x4 trans, glm::mat4x4 rot);
-	glm::mat4x4 turn(float angle, glm::mat4x4 trans, glm::mat4x4 rot);
+	glm::mat4x4 turn(float angle, glm::mat4x4 rot);
 
 private:
-	//std::vector<Mesh> meshes;
+	Scene* scene;
 	Window* window;
 
 	GLuint vertexobject;

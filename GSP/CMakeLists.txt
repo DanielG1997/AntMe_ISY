@@ -23,8 +23,9 @@ add_executable(GSP
   src/scene.hpp
   src/renderer.cpp
   src/renderer.hpp
-  src/maze.cpp
-  src/maze.hpp
+  src/mesh.cpp
+  src/mesh.hpp
+  src/stb_image.h
   )
 
 find_package(OpenGL REQUIRED)
