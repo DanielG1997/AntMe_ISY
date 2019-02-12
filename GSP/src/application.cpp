@@ -4,14 +4,6 @@
 Application::Application() : window_(960, 600) {}
 
 int Application::Run() {
-  //Scene scene_1(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\ufo\ufo.obj)");
-  //this->scenes_.push_back(scene_1);
-  //Scene scene_2(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b02.obj)");
-  //this->scenes_.push_back(scene_2);
-  //Scene scene_3(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b03.obj)");
-  //this->scenes_.push_back(scene_3);
-  //Scene scene_4(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b04.obj)");
-  //this->scenes_.push_back(scene_4);
 
   Renderer renderer(&this->window_);
 
