@@ -110,7 +110,7 @@ std::vector<Texture> Scene::loadMaterialTextures(aiMaterial *mat, aiTextureType 
 		if (!skip)
 		{   
 			Texture texture;
-			texture.id = TextureFromFile(str.C_Str(), directory, true);
+			texture.id = TextureFromFile(str.C_Str(), directory);
 			texture.type = typeName;
 			texture.path = str.C_Str();
 			textures.push_back(texture);
@@ -120,7 +120,7 @@ std::vector<Texture> Scene::loadMaterialTextures(aiMaterial *mat, aiTextureType 
 	return textures;
 }
 
-unsigned int Scene::TextureFromFile(const char *filename, const std::string &directory, bool gamma)
+unsigned int Scene::TextureFromFile(const char *filename, const std::string &directory)
 {
 	std::string path = directory + filename;
 

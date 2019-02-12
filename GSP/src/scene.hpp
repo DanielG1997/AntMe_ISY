@@ -24,7 +24,7 @@ class Scene {
 	 Mesh processMesh(aiMesh* mesh, const aiScene* scene);
 
 	 std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
-	 unsigned int TextureFromFile(const char *filename, const std::string &directory, bool gamma);
+	 unsigned int TextureFromFile(const char *filename, const std::string &directory);
 };
 
 #endif  // SCENE_HPP_

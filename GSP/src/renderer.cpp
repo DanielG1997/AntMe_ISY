@@ -111,7 +111,7 @@ void Renderer::draw(glm::mat4x4 camT, glm::mat4x4 camR) {
 	//					 v0,n3,v1,n3,v3,n3
 	//};
 	/**********************************************************************************************************************/
-	glm::mat4x4 perspective = this->getPerspectiveMatrix(8, -8, 5, -5, 5, 1);
+	glm::mat4x4 perspective = this->getPerspectiveMatrix(4, -4, 2, -2, 2, 1);
 	glm::mat4x4 camera = glm::inverse(camT * camR);
 
 	glm::mat4x4 projection = perspective * camera;
@@ -154,10 +154,10 @@ void Renderer::draw(glm::mat4x4 camT, glm::mat4x4 camR) {
 	GLint colorlocation = glGetUniformLocation(shaderprogram, "user_color");
 	glUniform3f(colorlocation, 0.7f, 0.7f, 0.7f);
 
-	Scene scene_(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\ufo\ufo.obj)");
-	scene_.render(shaderprogram);
-	//Scene scene_1(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b01.obj)");
-	//scene_1.render(shaderprogram);
+	//Scene scene_(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\ufo\ufo.obj)");
+	//scene_.render(shaderprogram);
+	Scene scene_1(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b01.obj)");
+	scene_1.render(shaderprogram);
 	//Scene scene_2(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b02.obj)");
 	//scene_2.render(shaderprogram);
 	//Scene scene_3(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b03.obj)");
