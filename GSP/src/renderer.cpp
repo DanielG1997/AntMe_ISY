@@ -1,8 +1,8 @@
 #include "renderer.hpp"
 
-Renderer::Renderer(Window* window, Scene* scene) {
+Renderer::Renderer(Window* window) {
 	this->window = window;
-	this->scene = scene;
+
 	//create VBO and VAO
 	glGenVertexArrays(1, &vertexobject);
 	glGenBuffers(1, &bufferobject);
@@ -41,6 +41,7 @@ GLuint Renderer::createShaderProgram() {
 					 "void main() {\n"
 					 "vec3 intensity = ka * ca + kd * ci * max(0.0f, dot(vertex_normal_worldspace, l)) + ks * ci * pow(max(0.0f, dot(vertex_normal_worldspace, h)), phong);\n"
 					 "color = intensity * user_color;\n"
+					 //"color = intensity;\n"
 					 "}";
 	
 	int success;
@@ -117,15 +118,6 @@ void Renderer::draw(glm::mat4x4 camT, glm::mat4x4 camR) {
 
 	GLuint shaderprogram = this->createShaderProgram();
 
-	//GLint size = sizeof(glm::vec3);
-
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(data), &data, GL_STATIC_DRAW);
-
-	//glEnableVertexAttribArray(0);
-	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 2 * size, nullptr);
-	//glEnableVertexAttribArray(1);
-	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 2 * size, (void*)size);
-
 	glEnable(GL_DEPTH_TEST);
 
 	//lightinformation using only one lightsource
@@ -160,9 +152,27 @@ void Renderer::draw(glm::mat4x4 camT, glm::mat4x4 camR) {
 	glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(projection));
 	//colors
 	GLint colorlocation = glGetUniformLocation(shaderprogram, "user_color");
-	glUniform3f(colorlocation, 0.0f, 1.0f, 0.0f);
+	glUniform3f(colorlocation, 0.7f, 0.7f, 0.7f);
 
-	this->scene->render(shaderprogram);
+	Scene scene_(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\ufo\ufo.obj)");
+	scene_.render(shaderprogram);
+	//Scene scene_1(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b01.obj)");
+	//scene_1.render(shaderprogram);
+	//Scene scene_2(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b02.obj)");
+	//scene_2.render(shaderprogram);
+	//Scene scene_3(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b03.obj)");
+	//scene_3.render(shaderprogram);
+	//Scene scene_4(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b04.obj)");
+	//scene_4.render(shaderprogram);
+
+	//GLint size = sizeof(glm::vec3);
+
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(data), &data, GL_STATIC_DRAW);
+
+	//glEnableVertexAttribArray(0);
+	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 2 * size, nullptr);
+	//glEnableVertexAttribArray(1);
+	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 2 * size, (void*)size);
 
 	//glDrawArrays(GL_TRIANGLES, 0, 12);
 	//glUniform3f(colorlocation, 0.0f, 1.0f, 0.0f);

@@ -2,17 +2,17 @@
 #include "stb_image.h"
 #include "scene.hpp"
 
-Scene::Scene() {
+Scene::Scene(const std::string path) {
 	Assimp::Importer importer;
 
-	const aiScene* scene = importer.ReadFile(filename, aiProcess_Triangulate | aiProcess_FlipUVs);
+	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
 		printf("%s\n", importer.GetErrorString());
 		return;
 	}
-	directory = filename.substr(0, filename.find_last_of('\\' + 1));
+	directory = path.substr(0, path.find_last_of('\\' + 1));
 
 	processNode(scene->mRootNode, scene);
 }

@@ -5,7 +5,7 @@
 
 class Renderer : public Geometry {
 public:
-	Renderer(Window* window, Scene* scene);
+	Renderer(Window* window);
 
 	GLuint createShaderProgram();
 	void deleteShaderProgram();
@@ -15,7 +15,6 @@ public:
 	glm::mat4x4 turn(float angle, glm::mat4x4 rot);
 
 private:
-	Scene* scene;
 	Window* window;
 
 	GLuint vertexobject;

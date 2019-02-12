@@ -1,10 +1,20 @@
 #include "application.hpp"
 #include <iostream>
 
-Application::Application() : window_(960, 600), scene_() {}
+Application::Application() : window_(960, 600) {}
 
 int Application::Run() {
-  Renderer renderer(&this->window_, &this->scene_);
+  //Scene scene_1(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\ufo\ufo.obj)");
+  //this->scenes_.push_back(scene_1);
+  //Scene scene_2(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b02.obj)");
+  //this->scenes_.push_back(scene_2);
+  //Scene scene_3(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b03.obj)");
+  //this->scenes_.push_back(scene_3);
+  //Scene scene_4(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b04.obj)");
+  //this->scenes_.push_back(scene_4);
+
+  Renderer renderer(&this->window_);
+
   glm::vec3 e = glm::vec3(0, 2, 2);
   glm::vec3 c = glm::vec3(0, 0, 0);
   glm::vec3 b = -glm::normalize(c - e);
@@ -19,7 +29,7 @@ int Application::Run() {
   //bool flag = false;
   //float degrees = 0.0;
   while (runs) {
-	window_.setColor(0.0, 0.5, 1.0, 1.0);
+	//window_.setColor(0.0, 0.5, 1.0, 1.0);
     while (SDL_PollEvent(&event)) {
 		window_.clear();
 		if (event.type == SDL_QUIT) {
@@ -29,11 +39,11 @@ int Application::Run() {
 		else if (event.type == SDL_KEYDOWN) {
 			switch (event.key.keysym.scancode) {
 				case SDL_SCANCODE_W :
-					cameratranslation = renderer.move(-0.1f, cameratranslation, camerarotation);
+					cameratranslation = renderer.move(-1.0f, cameratranslation, camerarotation);
 					break;
 
 				case SDL_SCANCODE_S:
-					cameratranslation = renderer.move(0.1f, cameratranslation, camerarotation);
+					cameratranslation = renderer.move(1.0f, cameratranslation, camerarotation);
 					break;
 
 				case SDL_SCANCODE_A:

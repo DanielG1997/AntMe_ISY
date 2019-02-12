@@ -13,7 +13,6 @@ class Application {
 
  private:
   Window window_;
-  Scene scene_;
 };
 
 #endif  // APPLICATION_HPP_
