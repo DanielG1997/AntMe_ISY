@@ -46,6 +46,14 @@ int Application::Run() {
 					camerarotation = renderer.turn(-90 * glm::pi<float>() / 180, camerarotation);
 					break;
 
+				case SDL_SCANCODE_LSHIFT:
+					cameratranslation = renderer.fly(-5.0f, cameratranslation, camerarotation);
+					break;
+
+				case SDL_SCANCODE_SPACE:
+					cameratranslation = renderer.move(5.0f, cameratranslation, camerarotation);
+					break;
+
 				default:
 					break;
 

@@ -16,8 +16,11 @@ public:
 	glm::mat4x4 move(float dist, glm::mat4x4 trans, glm::mat4x4 rot);
 	glm::mat4x4 turn(float angle, glm::mat4x4 rot);
 
+	glm::mat4x4 fly(float dist, glm::mat4x4 trans, glm::mat4x4 rot);
+
 private:
 	Window* window;
+	Field* field;
 
 	GLuint vertexobject;
 	GLuint bufferobject;
