@@ -92,7 +92,7 @@ void Renderer::deleteShaderProgram() {
 
 void Renderer::draw(glm::mat4x4 camT, glm::mat4x4 camR) {
 
-	glm::mat4x4 perspective = glm::perspective(45.0, 1 / (double) (960 / 600), 1.0, 10.0); //this->getPerspectiveMatrix(8, -8, 5, -5, 10, 1);
+	glm::mat4x4 perspective = glm::perspective(45.0, 1 / (double) (960 / 600), 1.0, 100.0); //this->getPerspectiveMatrix(8, -8, 5, -5, 10, 1);
 	glm::mat4x4 camera = glm::inverse(camT * camR);
 
 	glm::vec3 trans = glm::vec3(-1, 0, 2);
