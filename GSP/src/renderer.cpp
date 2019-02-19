@@ -212,5 +212,5 @@ glm::mat4x4 Renderer::turn(float angle, glm::mat4x4 rot) {
 }
 
 glm::mat4x4 Renderer::fly(float dist, glm::mat4x4 trans, glm::mat4x4 rot) {
-	return glm::translate(trans, dist * glm::vec3(rot[0]));
+	return glm::translate(trans, glm::vec3(0, dist, 0));
 }
