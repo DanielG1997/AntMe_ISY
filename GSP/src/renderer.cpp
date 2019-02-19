@@ -157,6 +157,7 @@ void Renderer::draw(glm::mat4x4 camT, glm::mat4x4 camR) {
 }
 
 void Renderer::createRoom(glm::mat4x4 projection, GLuint shaderprogram, int** data) {
+
 	Scene scene_1(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b01.obj)");
 	Scene scene_2(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b02.obj)");
 	Scene scene_3(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b03.obj)");
@@ -164,33 +165,37 @@ void Renderer::createRoom(glm::mat4x4 projection, GLuint shaderprogram, int** da
 
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			if (i = 0) {
-				glm::vec3 trans = glm::vec3(3 * i, 0, 3*j);
-				projection = projection * this->getTranslationMatrix(trans);
-				GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
-				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(projection));
-				scene_1.render(shaderprogram);
-			}
-			if (i = 1) {
-				glm::vec3 trans = glm::vec3(3 * i, 0, 3 * j);
-				projection = projection * this->getTranslationMatrix(trans);
-				GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
-				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(projection));
-				scene_2.render(shaderprogram);
-			}
-			if (i = 2) {
-				glm::vec3 trans = glm::vec3(3 * i, 0, 3 * j);
-				projection = projection * this->getTranslationMatrix(trans);
-				GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
-				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(projection));
-				scene_3.render(shaderprogram);
-			}
-			if (i = 3) {
+			if (i == 0) {
 				glm::vec3 trans = glm::vec3(3 * i, 0, 3 * j);
 				projection = projection * this->getTranslationMatrix(trans);
 				GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
 				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(projection));
 				scene_4.render(shaderprogram);
+				projection = projection * glm::inverse(this->getTranslationMatrix(trans));
+			}
+			if (i == 1) {
+				glm::vec3 trans = glm::vec3(3 * i, 0, 3 * j);
+				projection = projection * this->getTranslationMatrix(trans);
+				GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
+				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(projection));
+				scene_3.render(shaderprogram);
+				projection = projection * glm::inverse(this->getTranslationMatrix(trans));
+			}
+			if (i == 2) {
+				glm::vec3 trans = glm::vec3(3 * i, 0, 3 * j);
+				projection = projection * this->getTranslationMatrix(trans);
+				GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
+				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(projection));
+				scene_2.render(shaderprogram);
+				projection = projection * glm::inverse(this->getTranslationMatrix(trans));
+			}
+			if (i == 3) {
+				glm::vec3 trans = glm::vec3(3 * i, 0, 3 * j);
+				projection = projection * this->getTranslationMatrix(trans);
+				GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
+				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(projection));
+				scene_1.render(shaderprogram);
+				projection = projection * glm::inverse(this->getTranslationMatrix(trans));
 			}
 		}
 	}
