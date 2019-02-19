@@ -40,8 +40,8 @@ GLuint Renderer::createShaderProgram() {
 					 "layout(location = 0) out vec3 color;\n"
 					 "void main() {\n"
 					 "vec3 intensity = ka * ca + kd * ci * max(0.0f, dot(vertex_normal_worldspace, l)) + ks * ci * pow(max(0.0f, dot(vertex_normal_worldspace, h)), phong);\n"
-					 "color = intensity * user_color;\n"
-					 //"color = intensity;\n"
+					 //"color = intensity * user_color;\n"
+					 "color = intensity;\n"
 					 "}";
 	
 	int success;
@@ -91,11 +91,14 @@ void Renderer::deleteShaderProgram() {
 }
 
 void Renderer::draw(glm::mat4x4 camT, glm::mat4x4 camR) {
-	glm::mat4x4 perspective = glm::perspective(45.0, 1 / (double) (960 / 600), 1.0, 10.0);
-		//this->getPerspectiveMatrix(4, -4, 2, -2, 2, 1);
+
+	glm::mat4x4 perspective = glm::perspective(45.0, 1 / (double) (960 / 600), 1.0, 10.0); //this->getPerspectiveMatrix(8, -8, 5, -5, 10, 1);
 	glm::mat4x4 camera = glm::inverse(camT * camR);
 
-	glm::mat4x4 projection = perspective * camera;
+	glm::vec3 trans = glm::vec3(-1, 0, 2);
+	glm::mat4x4 translation = this->getTranslationMatrix(trans);
+
+	glm::mat4x4 projection = perspective * camera * translation;
 
 	GLuint shaderprogram = this->createShaderProgram();
 
@@ -135,29 +138,10 @@ void Renderer::draw(glm::mat4x4 camT, glm::mat4x4 camR) {
 	GLint colorlocation = glGetUniformLocation(shaderprogram, "user_color");
 	glUniform3f(colorlocation, 1.0f, 1.0f, 1.0f);
 
-	//for (int i = 0; i < 4; i++) {
-	//	for (int j = 0; j < 4; j++) {
-	//		if (i = 0) {
-	//			Scene scene_1(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b01.obj)");
-	//			scene_1.render(shaderprogram);
-	//		}
-	//		else if (i = 1) {
-	//			Scene scene_2(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b02.obj)");
-	//			scene_2.render(shaderprogram);
-	//		}
-	//		else if (i = 2) {
-	//			Scene scene_3(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b03.obj)");
-	//			scene_3.render(shaderprogram);
-	//		}
-	//		else if (i = 3) {
-	//			Scene scene_4(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b04.obj)");
-	//			scene_4.render(shaderprogram);
-	//		}
-	//	}
-	//}
+	this->createRoom(projection, shaderprogram, 0);
 
-	Scene scene(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\Circlemaze\Circlemaze.obj)");
-	scene.render(shaderprogram);
+	//Scene scene(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\Circlemaze\Circlemaze.obj)");
+	//scene.render(shaderprogram);
 	//Scene scene_(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\ufo\ufo.obj)");
 	//scene_.render(shaderprogram);
 	//Scene scene_1(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b01.obj)");
@@ -169,25 +153,47 @@ void Renderer::draw(glm::mat4x4 camT, glm::mat4x4 camR) {
 	//Scene scene_4(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b04.obj)");
 	//scene_4.render(shaderprogram);
 
-	//GLint size = sizeof(glm::vec3);
-
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(data), &data, GL_STATIC_DRAW);
-
-	//glEnableVertexAttribArray(0);
-	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 2 * size, nullptr);
-	//glEnableVertexAttribArray(1);
-	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 2 * size, (void*)size);
-
-	//glDrawArrays(GL_TRIANGLES, 0, 12);
-	//glUniform3f(colorlocation, 0.0f, 1.0f, 0.0f);
-	//glDrawArrays(GL_TRIANGLES, 0, 3);
-	//glUniform3f(colorlocation, 1.0f, 0.0f, 0.0f);
-	//glDrawArrays(GL_TRIANGLES, 3, 3);
-	//glUniform3f(colorlocation, 1.0f, 1.0f, 0.0f);
-	//glDrawArrays(GL_TRIANGLES, 6, 3);
-	//glUniform3f(colorlocation, 0.0f, 0.0f, 1.0f);
-	//glDrawArrays(GL_TRIANGLES, 9, 3);
 	this->deleteShaderProgram();
+}
+
+void Renderer::createRoom(glm::mat4x4 projection, GLuint shaderprogram, int** data) {
+	Scene scene_1(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b01.obj)");
+	Scene scene_2(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b02.obj)");
+	Scene scene_3(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b03.obj)");
+	Scene scene_4(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b04.obj)");
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (i = 0) {
+				glm::vec3 trans = glm::vec3(3 * i, 0, 3*j);
+				projection = projection * this->getTranslationMatrix(trans);
+				GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
+				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(projection));
+				scene_1.render(shaderprogram);
+			}
+			if (i = 1) {
+				glm::vec3 trans = glm::vec3(3 * i, 0, 3 * j);
+				projection = projection * this->getTranslationMatrix(trans);
+				GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
+				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(projection));
+				scene_2.render(shaderprogram);
+			}
+			if (i = 2) {
+				glm::vec3 trans = glm::vec3(3 * i, 0, 3 * j);
+				projection = projection * this->getTranslationMatrix(trans);
+				GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
+				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(projection));
+				scene_3.render(shaderprogram);
+			}
+			if (i = 3) {
+				glm::vec3 trans = glm::vec3(3 * i, 0, 3 * j);
+				projection = projection * this->getTranslationMatrix(trans);
+				GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
+				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(projection));
+				scene_4.render(shaderprogram);
+			}
+		}
+	}
 }
 
 glm::mat4x4 Renderer::move(float dist, glm::mat4x4 trans, glm::mat4x4 rot) {

@@ -7,8 +7,8 @@ int Application::Run() {
 
   Renderer renderer(&this->window_);
 
-  glm::vec3 e = glm::vec3(0, 0.00000001, 2);
-  glm::vec3 c = glm::vec3(0, 0, 0);
+  glm::vec3 e = glm::vec3(0, 1, 2);
+  glm::vec3 c = glm::vec3(0, 1, 0);
   glm::vec3 b = -glm::normalize(c - e);
   glm::vec3 s = glm::normalize(glm::cross(glm::vec3(0, 1, 0), b));
   glm::vec3 u = glm::cross(b, s);
