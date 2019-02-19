@@ -49,12 +49,18 @@ position Field::newPosition(position p) {
 	if (p.x > 0) {
 		if ((Tiles[p.x][p.y]->t == Tile::exit::open || Tiles[p.x][p.y]->t == Tile::exit::dc) && isFieldEmpty(position{ p.x - 1, p.y })) {
 			available.push_back(position{ p.x - 1, p.y });
+			available.push_back(position{ p.x - 1, p.y });
+			available.push_back(position{ p.x - 1, p.y });
+			available.push_back(position{ p.x - 1, p.y });
 		}
 	}
 
 	//right free test
 	if (p.y < Tiles.at(1).size()) {
 		if ((Tiles[p.x][p.y]->r == Tile::exit::open || Tiles[p.x][p.y]->r == Tile::exit::dc) && isFieldEmpty(position{ p.x, p.y + 1 })) {
+			available.push_back(position{ p.x, p.y + 1 });
+			available.push_back(position{ p.x, p.y + 1 });
+			available.push_back(position{ p.x, p.y + 1 });
 			available.push_back(position{ p.x, p.y + 1 });
 		}
 	}		
@@ -64,12 +70,18 @@ position Field::newPosition(position p) {
 	if (p.y > 0) {
 		if ((Tiles[p.x][p.y]->l == Tile::exit::open || Tiles[p.x][p.y]->l == Tile::exit::dc) && isFieldEmpty(position{ p.x, p.y - 1 })) {
 			available.push_back(position{ p.x, p.y - 1 });
+			available.push_back(position{ p.x, p.y - 1 });
+			available.push_back(position{ p.x, p.y - 1 });
+			available.push_back(position{ p.x, p.y - 1 });
 		}
 	}
 
 	//bottom free test
 	if (p.x < Tiles.size()) {
 		if ((Tiles[p.x][p.y]->b == Tile::exit::open || Tiles[p.x][p.y]->b == Tile::exit::dc) && isFieldEmpty(position{ p.x + 1, p.y })) {
+			available.push_back(position{ p.x + 1, p.y });
+			available.push_back(position{ p.x + 1, p.y });
+			available.push_back(position{ p.x + 1, p.y });
 			available.push_back(position{ p.x + 1, p.y });
 		}
 	}
@@ -83,8 +95,8 @@ position Field::newPosition(position p) {
 		worklist.pop_front();
 		return pos;
 	}
-
-	std::random_shuffle(std::begin(available), std::end(available));
+	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+	std::shuffle(std::begin(available), std::end(available), std::default_random_engine(seed));
 	worklist.push_front(p);
 	position q = available.front();
 	connect(p, q);
