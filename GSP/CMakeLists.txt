@@ -25,6 +25,10 @@ add_executable(GSP
   src/renderer.hpp
   src/mesh.cpp
   src/mesh.hpp
+  src/tile.h
+  src/tile.cpp
+  src/field.h
+  src/field.cpp
   src/stb_image.h
   )
 

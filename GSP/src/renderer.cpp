@@ -2,6 +2,7 @@
 
 Renderer::Renderer(Window* window) {
 	this->window = window;
+	this->field = new Field(4, 4);
 
 	//create VBO and VAO
 	glGenVertexArrays(1, &vertexobject);
@@ -92,10 +93,10 @@ void Renderer::deleteShaderProgram() {
 
 void Renderer::draw(glm::mat4x4 camT, glm::mat4x4 camR) {
 
-	glm::mat4x4 perspective = glm::perspective(45.0, 1 / (double) (960 / 600), 1.0, 100.0); //this->getPerspectiveMatrix(8, -8, 5, -5, 10, 1);
+	glm::mat4x4 perspective = glm::perspective(45.0, 1 / (double) (960 / 600), 1.0, 20.0); //this->getPerspectiveMatrix(8, -8, 5, -5, 10, 1);
 	glm::mat4x4 camera = glm::inverse(camT * camR);
 
-	glm::vec3 trans = glm::vec3(-1, 0, 2);
+	glm::vec3 trans = glm::vec3(-4, 0, 5);
 	glm::mat4x4 translation = this->getTranslationMatrix(trans);
 
 	glm::mat4x4 projection = perspective * camera * translation;
@@ -165,38 +166,39 @@ void Renderer::createRoom(glm::mat4x4 projection, GLuint shaderprogram, int** da
 
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			if (i == 0) {
-				glm::vec3 trans = glm::vec3(3 * i, 0, 3 * j);
-				projection = projection * this->getTranslationMatrix(trans);
-				GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
-				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(projection));
-				scene_4.render(shaderprogram);
-				projection = projection * glm::inverse(this->getTranslationMatrix(trans));
-			}
-			if (i == 1) {
-				glm::vec3 trans = glm::vec3(3 * i, 0, 3 * j);
-				projection = projection * this->getTranslationMatrix(trans);
-				GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
-				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(projection));
-				scene_3.render(shaderprogram);
-				projection = projection * glm::inverse(this->getTranslationMatrix(trans));
-			}
-			if (i == 2) {
-				glm::vec3 trans = glm::vec3(3 * i, 0, 3 * j);
-				projection = projection * this->getTranslationMatrix(trans);
-				GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
-				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(projection));
-				scene_2.render(shaderprogram);
-				projection = projection * glm::inverse(this->getTranslationMatrix(trans));
-			}
-			if (i == 3) {
-				glm::vec3 trans = glm::vec3(3 * i, 0, 3 * j);
-				projection = projection * this->getTranslationMatrix(trans);
-				GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
-				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(projection));
-				scene_1.render(shaderprogram);
-				projection = projection * glm::inverse(this->getTranslationMatrix(trans));
-			}
+			pair pair = field->getPair(i, j);
+			//if (i == 0) {
+			//	glm::vec3 trans = glm::vec3(3 * i, 0, -3 * j);
+			//	projection = projection * this->getTranslationMatrix(trans);
+			//	GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
+			//	glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(projection));
+			//	scene_4.render(shaderprogram);
+			//	projection = projection * glm::inverse(this->getTranslationMatrix(trans));
+			//}
+			//if (i == 1) {
+			//	glm::vec3 trans = glm::vec3(3 * i, 0, -3 * j);
+			//	projection = projection * this->getTranslationMatrix(trans);
+			//	GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
+			//	glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(projection));
+			//	scene_3.render(shaderprogram);
+			//	projection = projection * glm::inverse(this->getTranslationMatrix(trans));
+			//}
+			//if (i == 2) {
+			//	glm::vec3 trans = glm::vec3(3 * i, 0, -3 * j);
+			//	projection = projection * this->getTranslationMatrix(trans);
+			//	GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
+			//	glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(projection));
+			//	scene_2.render(shaderprogram);
+			//	projection = projection * glm::inverse(this->getTranslationMatrix(trans));
+			//}
+			//if (i == 3) {
+			//	glm::vec3 trans = glm::vec3(3 * i, 0, -3 * j);
+			//	projection = projection * this->getTranslationMatrix(trans);
+			//	GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
+			//	glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(projection));
+			//	scene_1.render(shaderprogram);
+			//	projection = projection * glm::inverse(this->getTranslationMatrix(trans));
+			//}
 		}
 	}
 }

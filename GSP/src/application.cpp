@@ -21,8 +21,7 @@ int Application::Run() {
   //bool flag = false;
   //float degrees = 0.0;
   while (runs) {
-	//window_.setColor(0.0, 0.5, 1.0, 1.0);
-	window_.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+	window_.setColor(0.0f, 0.5f, 1.0f, 1.0f);
     while (SDL_PollEvent(&event)) {
 		window_.clear();
 		if (event.type == SDL_QUIT) {

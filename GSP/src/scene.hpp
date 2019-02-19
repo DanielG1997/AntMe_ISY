@@ -17,7 +17,6 @@ class Scene {
 	 std::vector<Mesh> meshes;
 	 std::vector<Texture> textures_loaded;
  private:
-	 //const std::string filename = R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\Circlemaze\Circlemaze.obj)";
 	 std::string directory;
 
 	 void processNode(aiNode* node, const aiScene* scene);

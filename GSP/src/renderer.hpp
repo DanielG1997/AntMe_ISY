@@ -2,6 +2,7 @@
 #define RENDERER_HPP_
 
 #include "scene.hpp"
+#include "field.h"
 
 class Renderer : public Geometry {
 public:
