@@ -51,7 +51,7 @@ int Application::Run() {
 					break;
 
 				case SDL_SCANCODE_UP:
-					cameratranslation = renderer.move(5.0f, cameratranslation, camerarotation);
+					cameratranslation = renderer.fly(5.0f, cameratranslation, camerarotation);
 					break;
 
 				default:

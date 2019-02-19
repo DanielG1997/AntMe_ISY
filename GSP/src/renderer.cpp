@@ -93,7 +93,7 @@ void Renderer::deleteShaderProgram() {
 
 void Renderer::draw(glm::mat4x4 camT, glm::mat4x4 camR) {
 
-	glm::mat4x4 perspective = glm::perspective(45.0, 1 / (double) (960 / 600), 1.0, 20.0); //this->getPerspectiveMatrix(8, -8, 5, -5, 10, 1);
+	glm::mat4x4 perspective = glm::perspective(45.0, 1 / (double) (960 / 600), 1.0, 50.0); //this->getPerspectiveMatrix(8, -8, 5, -5, 10, 1);
 	glm::mat4x4 camera = glm::inverse(camT * camR);
 
 	glm::vec3 trans = glm::vec3(-4, 0, 5);
@@ -139,7 +139,7 @@ void Renderer::draw(glm::mat4x4 camT, glm::mat4x4 camR) {
 	GLint colorlocation = glGetUniformLocation(shaderprogram, "user_color");
 	glUniform3f(colorlocation, 1.0f, 1.0f, 1.0f);
 
-	this->createRoom(projection, shaderprogram, 0);
+	this->createRoom(projection, shaderprogram);
 
 	//Scene scene(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\Circlemaze\Circlemaze.obj)");
 	//scene.render(shaderprogram);
@@ -157,7 +157,7 @@ void Renderer::draw(glm::mat4x4 camT, glm::mat4x4 camR) {
 	this->deleteShaderProgram();
 }
 
-void Renderer::createRoom(glm::mat4x4 projection, GLuint shaderprogram, int** data) {
+void Renderer::createRoom(glm::mat4x4 projection, GLuint shaderprogram) {
 
 	Scene scene_1(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b01.obj)");
 	Scene scene_2(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b02.obj)");
@@ -169,35 +169,31 @@ void Renderer::createRoom(glm::mat4x4 projection, GLuint shaderprogram, int** da
 			pair pair = field->getPair(i, j);
 			if (pair.b == 1) {
 				glm::vec3 trans = glm::vec3(3 * i, 0, -3 * j);
-				projection = projection * this->getRotationMatrix('Y', pair.rot) * this->getTranslationMatrix(trans);
+				glm::mat4x4 proj = projection * this->getTranslationMatrix(trans) * this->getRotationMatrix('Y', pair.rot);
 				GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
-				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(projection));
+				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(proj));
 				scene_1.render(shaderprogram);
-				projection = projection * glm::inverse(this->getRotationMatrix('Y', pair.rot) * this->getTranslationMatrix(trans));
 			}
 			if (pair.b == 2) {
 				glm::vec3 trans = glm::vec3(3 * i, 0, -3 * j);
-				projection = projection * this->getRotationMatrix('Y', pair.rot) * this->getTranslationMatrix(trans);
+				glm::mat4x4 proj = projection * this->getTranslationMatrix(trans) * this->getRotationMatrix('Y', pair.rot);
 				GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
-				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(projection));
+				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(proj));
 				scene_2.render(shaderprogram);
-				projection = projection * glm::inverse(this->getRotationMatrix('Y', pair.rot) * this->getTranslationMatrix(trans));
 			}
 			if (pair.b == 3) {
 				glm::vec3 trans = glm::vec3(3 * i, 0, -3 * j);
-				projection = projection * this->getRotationMatrix('Y', pair.rot) * this->getTranslationMatrix(trans);
+				glm::mat4x4 proj = projection * this->getTranslationMatrix(trans) * this->getRotationMatrix('Y', pair.rot);
 				GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
-				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(projection));
+				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(proj));
 				scene_3.render(shaderprogram);
-				projection = projection * glm::inverse(this->getRotationMatrix('Y', pair.rot) * this->getTranslationMatrix(trans));
 			}
 			if (pair.b == 4) {
 				glm::vec3 trans = glm::vec3(3 * i, 0, -3 * j);
-				projection = projection * this->getRotationMatrix('Y', pair.rot) * this->getTranslationMatrix(trans);
+				glm::mat4x4 proj = projection * this->getTranslationMatrix(trans) * this->getRotationMatrix('Y', pair.rot);
 				GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
-				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(projection));
+				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(proj));
 				scene_4.render(shaderprogram);
-				projection = projection * glm::inverse(this->getRotationMatrix('Y', pair.rot) * this->getTranslationMatrix(trans));
 			}
 		}
 	}
