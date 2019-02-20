@@ -163,6 +163,7 @@ void Renderer::createRoom(glm::mat4x4 projection, GLuint shaderprogram) {
 	Scene scene_2(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b02.obj)");
 	Scene scene_3(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b03.obj)");
 	Scene scene_4(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b04.obj)");
+	Scene scene_5(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b05.obj)");
 
 	for (int i = 0; i < field->x; i++) {
 		for (int j = 0; j < field->y; j++) {
@@ -194,6 +195,13 @@ void Renderer::createRoom(glm::mat4x4 projection, GLuint shaderprogram) {
 				GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
 				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(proj));
 				scene_4.render(shaderprogram);
+			}
+			if (pair.b == 5) {
+				glm::vec3 trans = glm::vec3(3 * i, 0, -3 * j);
+				glm::mat4x4 proj = projection * this->getTranslationMatrix(trans) * glm::inverse(this->getTranslationMatrix(glm::vec3(-1, 0, 0))) * this->getRotationMatrix('Y', pair.rot) * this->getTranslationMatrix(glm::vec3(-1, 0, 0));
+				GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
+				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(proj));
+				scene_5.render(shaderprogram);
 			}
 		}
 	}
