@@ -1,6 +1,8 @@
 #include "window.hpp"
 
 Window::Window(unsigned int width, unsigned int height) {
+  this->width = width;
+  this->height = height;
   SDL_Init(SDL_INIT_VIDEO);
 
   window_ =

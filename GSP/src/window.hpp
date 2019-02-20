@@ -8,6 +8,8 @@
 
 class Window{
  public:
+  unsigned int width, height;
+
   Window(unsigned int width, unsigned int height);
 
   void setColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
