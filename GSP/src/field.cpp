@@ -161,5 +161,8 @@ void Field::replace() {
 }
 
 pair Field::getPair(int x, int y) {
+	if (x == Tiles.size() - 1 && y == Tiles.at(1).size() - 1) {
+		return pair{ 5, 180 };
+	}
 	return pair{  std::stoi(Tiles[x][y]->actualTile->name), Tiles[x][y]->rotation };
 }
