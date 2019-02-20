@@ -2,7 +2,7 @@
 
 Renderer::Renderer(Window* window) {
 	this->window = window;
-	this->field = new Field(5, 5);
+	this->field = new Field(8, 8);
 
 	//create VBO and VAO
 	glGenVertexArrays(1, &vertexobject);
@@ -93,7 +93,7 @@ void Renderer::deleteShaderProgram() {
 
 void Renderer::draw(glm::mat4x4 camT, glm::mat4x4 camR) {
 
-	glm::mat4x4 perspective = glm::perspective(45.0, 1 / (double) (960 / 600), 1.0, 50.0); //this->getPerspectiveMatrix(8, -8, 5, -5, 10, 1);
+	glm::mat4x4 perspective = glm::perspective(45.0, 1 / (double) (this->window->width / this->window->height), 1.0, 50.0); //this->getPerspectiveMatrix(8, -8, 5, -5, 10, 1);
 	glm::mat4x4 camera = glm::inverse(camT * camR);
 
 	glm::vec3 trans = glm::vec3(-4, 0, 5);
@@ -159,10 +159,10 @@ void Renderer::draw(glm::mat4x4 camT, glm::mat4x4 camR) {
 
 void Renderer::createRoom(glm::mat4x4 projection, GLuint shaderprogram) {
 
-	Scene scene_1(R"(C:\Users\Lennart\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b01.obj)");
-	Scene scene_2(R"(C:\Users\Lennart\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b02.obj)");
-	Scene scene_3(R"(C:\Users\Lennart\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b03.obj)");
-	Scene scene_4(R"(C:\Users\Lennart\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b04.obj)");
+	Scene scene_1(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b01.obj)");
+	Scene scene_2(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b02.obj)");
+	Scene scene_3(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b03.obj)");
+	Scene scene_4(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b04.obj)");
 
 	for (int i = 0; i < field->x; i++) {
 		for (int j = 0; j < field->y; j++) {

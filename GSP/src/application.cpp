@@ -1,7 +1,7 @@
 #include "application.hpp"
 #include <iostream>
 
-Application::Application() : window_(960, 600) {}
+Application::Application() : window_(1152, 720) {}
 
 int Application::Run() {
 
