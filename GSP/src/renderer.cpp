@@ -2,7 +2,7 @@
 
 Renderer::Renderer(Window* window) {
 	this->window = window;
-	this->field = new Field(4, 4);
+	this->field = new Field(5, 5);
 
 	//create VBO and VAO
 	glGenVertexArrays(1, &vertexobject);
@@ -159,10 +159,10 @@ void Renderer::draw(glm::mat4x4 camT, glm::mat4x4 camR) {
 
 void Renderer::createRoom(glm::mat4x4 projection, GLuint shaderprogram) {
 
-	Scene scene_1(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b01.obj)");
-	Scene scene_2(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b02.obj)");
-	Scene scene_3(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b03.obj)");
-	Scene scene_4(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b04.obj)");
+	Scene scene_1(R"(C:\Users\Lennart\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b01.obj)");
+	Scene scene_2(R"(C:\Users\Lennart\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b02.obj)");
+	Scene scene_3(R"(C:\Users\Lennart\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b03.obj)");
+	Scene scene_4(R"(C:\Users\Lennart\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b04.obj)");
 
 	for (int i = 0; i < field->x; i++) {
 		for (int j = 0; j < field->y; j++) {
@@ -176,14 +176,14 @@ void Renderer::createRoom(glm::mat4x4 projection, GLuint shaderprogram) {
 			}
 			if (pair.b == 2) {
 				glm::vec3 trans = glm::vec3(3 * i, 0, -3 * j);
-				glm::mat4x4 proj = projection * this->getTranslationMatrix(trans) * glm::inverse(this->getTranslationMatrix(glm::vec3(-1, 0, 0))) * this->getRotationMatrix('Y', pair.rot) * this->getTranslationMatrix(glm::vec3(-1, 0, 0));
+				glm::mat4x4 proj = projection * this->getTranslationMatrix(trans) * glm::inverse(this->getTranslationMatrix(glm::vec3(-1, 0, 0))) * this->getRotationMatrix('Y', pair.rot + 180) * this->getTranslationMatrix(glm::vec3(-1, 0, 0));
 				GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
 				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(proj));
 				scene_2.render(shaderprogram);
 			}
 			if (pair.b == 3) {
 				glm::vec3 trans = glm::vec3(3 * i, 0, -3 * j);
-				glm::mat4x4 proj = projection * this->getTranslationMatrix(trans) * glm::inverse(this->getTranslationMatrix(glm::vec3(-1, 0, 0))) * this->getRotationMatrix('Y', pair.rot) * this->getTranslationMatrix(glm::vec3(-1, 0, 0));
+				glm::mat4x4 proj = projection * this->getTranslationMatrix(trans) * glm::inverse(this->getTranslationMatrix(glm::vec3(-1, 0, 0))) * this->getRotationMatrix('Y', pair.rot + 90) * this->getTranslationMatrix(glm::vec3(-1, 0, 0));
 				GLint matrixlocation = glGetUniformLocation(shaderprogram, "model_to_world_matrix");
 				glUniformMatrix4fv(matrixlocation, 1, GL_FALSE, glm::value_ptr(proj));
 				scene_3.render(shaderprogram);

@@ -34,7 +34,7 @@ int Tile::similiar(Tile* o) {
 		&& (this->b == dc || (this->b == open && o->r == open) || (this->b == closed && o->r == closed))
 		&& (this->l == dc || (this->l == open && o->b == open) || (this->l == closed && o->b == closed))) {
 		actualTile = o;
-		rotation = 90;
+		rotation = 270;
 		return 90;
 	}
 
@@ -54,7 +54,7 @@ int Tile::similiar(Tile* o) {
 		&& (this->b == dc || (this->b == open && o->l == open) || (this->b == closed && o->l == closed))
 		&& (this->l == dc || (this->l == open && o->t == open) || (this->l == closed && o->t == closed))) {
 		actualTile = o;
-		rotation = 270;
+		rotation = 90;
 		return 270;
 	}
 	return -1;
