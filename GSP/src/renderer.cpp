@@ -145,14 +145,6 @@ void Renderer::draw(glm::mat4x4 camT, glm::mat4x4 camR) {
 	//scene.render(shaderprogram);
 	//Scene scene_(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\ufo\ufo.obj)");
 	//scene_.render(shaderprogram);
-	//Scene scene_1(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b01.obj)");
-	//scene_1.render(shaderprogram);
-	//Scene scene_2(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b02.obj)");
-	//scene_2.render(shaderprogram);
-	//Scene scene_3(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b03.obj)");
-	//scene_3.render(shaderprogram);
-	//Scene scene_4(R"(C:\Users\Daniel\Documents\GitHub\AntMe_ISY\GSP\object\blocks\b04.obj)");
-	//scene_4.render(shaderprogram);
 
 	this->deleteShaderProgram();
 }

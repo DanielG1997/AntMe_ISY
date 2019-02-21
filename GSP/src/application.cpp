@@ -31,28 +31,28 @@ int Application::Run() {
 		else if (event.type == SDL_KEYDOWN) {
 			switch (event.key.keysym.scancode) {
 				case SDL_SCANCODE_W :
-					cameratranslation = renderer.move(-1.5f, cameratranslation, camerarotation);
+					cameratranslation = renderer.move(-0.1f, cameratranslation, camerarotation);
 					break;
 
 				case SDL_SCANCODE_S:
-					cameratranslation = renderer.move(1.5f, cameratranslation, camerarotation);
+					cameratranslation = renderer.move(0.1f, cameratranslation, camerarotation);
 					break;
 
 				case SDL_SCANCODE_A:
-					camerarotation = renderer.turn(90 * glm::pi<float>() / 180, camerarotation);
+					camerarotation = renderer.turn(5 * glm::pi<float>() / 180, camerarotation);
 					break;
 
 				case SDL_SCANCODE_D:
-					camerarotation = renderer.turn(-90 * glm::pi<float>() / 180, camerarotation);
+					camerarotation = renderer.turn(-5 * glm::pi<float>() / 180, camerarotation);
 					break;
 
-				case SDL_SCANCODE_DOWN:
-					cameratranslation = renderer.fly(-3.0f, cameratranslation, camerarotation);
-					break;
+				//case SDL_SCANCODE_DOWN:
+				//	cameratranslation = renderer.fly(-3.0f, cameratranslation, camerarotation);
+				//	break;
 
-				case SDL_SCANCODE_UP:
-					cameratranslation = renderer.fly(3.0f, cameratranslation, camerarotation);
-					break;
+				//case SDL_SCANCODE_UP:
+				//	cameratranslation = renderer.fly(3.0f, cameratranslation, camerarotation);
+				//	break;
 
 				default:
 					break;
