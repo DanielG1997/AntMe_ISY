@@ -8,12 +8,12 @@
 #include <string>
 
 
-struct position{
+struct Position{
 	int x;
 	int y;
 };
 
-struct pair {
+struct Pair {
 	int b;
 	int rot;
 };
@@ -28,17 +28,16 @@ public:
 	Tile* B04 = new Tile(Tile::exit::open, Tile::exit::open, Tile::exit::open, Tile::exit::open, -1, std::string("4"));
 
 	std::list<Tile*> tilelist = { B01, B02, B03, B04 };
-	std::list<position> worklist;
+	std::list<Position> worklist;
 	std::vector<std::vector<Tile*>> Tiles;
 	Field(int x, int y);
-	//Field();
 
-	position newPosition(position p);
-	bool isFieldEmpty(position p);
+	Position newPosition(Position p);
+	bool isFieldEmpty(Position p);
 	void fill();
 	void replace();
-	void connect(position a, position b);
-	pair getPair(int x, int y);
+	void connect(Position a, Position b);
+	Pair getPair(int x, int y);
 
 
 };

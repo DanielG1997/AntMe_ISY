@@ -159,7 +159,7 @@ void Renderer::createRoom(glm::mat4x4 projection, GLuint shaderprogram) {
 
 	for (int i = 0; i < field->x; i++) {
 		for (int j = 0; j < field->y; j++) {
-			pair pair = field->getPair(i, j);
+			Pair pair = field->getPair(i, j);
 			if (pair.b == 1) {
 				glm::vec3 trans = glm::vec3(3 * i, 0, -3 * j);
 				glm::mat4x4 proj = projection * this->getTranslationMatrix(trans) * glm::inverse(this->getTranslationMatrix(glm::vec3(-1, 0, 0))) * this->getRotationMatrix('Y', pair.rot) * this->getTranslationMatrix(glm::vec3(-1, 0, 0));

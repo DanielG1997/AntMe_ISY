@@ -30,7 +30,7 @@ Field::Field(int a, int b) {
 };
 
 void Field::fill() {
-	position pos;
+	Position pos;
 	pos.x = 1;
 	pos.y = 1;
 	//std::cout << "11" << std::endl;
@@ -40,49 +40,49 @@ void Field::fill() {
 		//std::cout << pos.x;
 		//std::cout << pos.y << std::endl;
 	}
-	connect(pos, position{(int) Tiles.size() - 1, (int) Tiles.at(1).size() - 1 });
+	connect(pos, Position{(int) Tiles.size() - 1, (int) Tiles.at(1).size() - 1 });
 }
 
-position Field::newPosition(position p) {
-	std::vector<position> available;
+Position Field::newPosition(Position p) {
+	std::vector<Position> available;
 	//top free test
 	if (p.x > 0) {
-		if ((Tiles[p.x][p.y]->t == Tile::exit::open || Tiles[p.x][p.y]->t == Tile::exit::dc) && isFieldEmpty(position{ p.x - 1, p.y })) {
-			available.push_back(position{ p.x - 1, p.y });
-			available.push_back(position{ p.x - 1, p.y });
-			available.push_back(position{ p.x - 1, p.y });
-			available.push_back(position{ p.x - 1, p.y });
+		if ((Tiles[p.x][p.y]->t == Tile::exit::open || Tiles[p.x][p.y]->t == Tile::exit::dc) && isFieldEmpty(Position{ p.x - 1, p.y })) {
+			available.push_back(Position{ p.x - 1, p.y });
+			available.push_back(Position{ p.x - 1, p.y });
+			available.push_back(Position{ p.x - 1, p.y });
+			available.push_back(Position{ p.x - 1, p.y });
 		}
 	}
 
 	//right free test
 	if (p.y < Tiles.at(1).size()) {
-		if ((Tiles[p.x][p.y]->r == Tile::exit::open || Tiles[p.x][p.y]->r == Tile::exit::dc) && isFieldEmpty(position{ p.x, p.y + 1 })) {
-			available.push_back(position{ p.x, p.y + 1 });
-			available.push_back(position{ p.x, p.y + 1 });
-			available.push_back(position{ p.x, p.y + 1 });
-			available.push_back(position{ p.x, p.y + 1 });
+		if ((Tiles[p.x][p.y]->r == Tile::exit::open || Tiles[p.x][p.y]->r == Tile::exit::dc) && isFieldEmpty(Position{ p.x, p.y + 1 })) {
+			available.push_back(Position{ p.x, p.y + 1 });
+			available.push_back(Position{ p.x, p.y + 1 });
+			available.push_back(Position{ p.x, p.y + 1 });
+			available.push_back(Position{ p.x, p.y + 1 });
 		}
 	}		
 	
 	
 	//left free test
 	if (p.y > 0) {
-		if ((Tiles[p.x][p.y]->l == Tile::exit::open || Tiles[p.x][p.y]->l == Tile::exit::dc) && isFieldEmpty(position{ p.x, p.y - 1 })) {
-			available.push_back(position{ p.x, p.y - 1 });
-			available.push_back(position{ p.x, p.y - 1 });
-			available.push_back(position{ p.x, p.y - 1 });
-			available.push_back(position{ p.x, p.y - 1 });
+		if ((Tiles[p.x][p.y]->l == Tile::exit::open || Tiles[p.x][p.y]->l == Tile::exit::dc) && isFieldEmpty(Position{ p.x, p.y - 1 })) {
+			available.push_back(Position{ p.x, p.y - 1 });
+			available.push_back(Position{ p.x, p.y - 1 });
+			available.push_back(Position{ p.x, p.y - 1 });
+			available.push_back(Position{ p.x, p.y - 1 });
 		}
 	}
 
 	//bottom free test
 	if (p.x < Tiles.size()) {
-		if ((Tiles[p.x][p.y]->b == Tile::exit::open || Tiles[p.x][p.y]->b == Tile::exit::dc) && isFieldEmpty(position{ p.x + 1, p.y })) {
-			available.push_back(position{ p.x + 1, p.y });
-			available.push_back(position{ p.x + 1, p.y });
-			available.push_back(position{ p.x + 1, p.y });
-			available.push_back(position{ p.x + 1, p.y });
+		if ((Tiles[p.x][p.y]->b == Tile::exit::open || Tiles[p.x][p.y]->b == Tile::exit::dc) && isFieldEmpty(Position{ p.x + 1, p.y })) {
+			available.push_back(Position{ p.x + 1, p.y });
+			available.push_back(Position{ p.x + 1, p.y });
+			available.push_back(Position{ p.x + 1, p.y });
+			available.push_back(Position{ p.x + 1, p.y });
 		}
 	}
 
@@ -91,19 +91,19 @@ position Field::newPosition(position p) {
 		if (worklist.empty()) {
 			//std::cout << "Worklist empty";
 		}
-		position pos = worklist.front();
+		Position pos = worklist.front();
 		worklist.pop_front();
 		return pos;
 	}
 	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 	std::shuffle(std::begin(available), std::end(available), std::default_random_engine(seed));
 	worklist.push_front(p);
-	position q = available.front();
+	Position q = available.front();
 	connect(p, q);
 	return q;
 }
 
-bool Field::isFieldEmpty(position p) {
+bool Field::isFieldEmpty(Position p) {
 	if (p.x < 0 || p.y < 0 || p.x > Tiles.size() || p.y > Tiles.at(1).size()) {
 		return false;
 	}
@@ -113,7 +113,7 @@ bool Field::isFieldEmpty(position p) {
 	return false;
 }
 
-void Field::connect(position a, position b) {
+void Field::connect(Position a, Position b) {
 	switch (a.x - b.x) {
 	case 0: break; //gleiche Zeile
 	case 1: {  //a unter b
@@ -160,9 +160,9 @@ void Field::replace() {
 	i++;
 }
 
-pair Field::getPair(int x, int y) {
+Pair Field::getPair(int x, int y) {
 	if (x == Tiles.size() - 1 && y == Tiles.at(1).size() - 1) {
-		return pair{ 5, 180 };
+		return Pair{ 5, 180 };
 	}
-	return pair{  std::stoi(Tiles[x][y]->actualTile->name), Tiles[x][y]->rotation };
+	return Pair{  std::stoi(Tiles[x][y]->actualTile->name), Tiles[x][y]->rotation };
 }
