@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/Daniel/Documents/AntMe_ISY/GSP
+# Install script for directory: C:/Users/Daniel/Documents/GitHub/AntMe_ISY/GSP
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Program Files/GSP")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/GSP")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/Daniel/Documents/AntMe_ISY/GSP/bin/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/Daniel/Documents/GitHub/AntMe_ISY/GSP/bin/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
